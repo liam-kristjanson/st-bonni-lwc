@@ -27,8 +27,7 @@ function App() {
     let reqHeaders = {
       'content-type':"application/json"
     }
-    console.log(stringifiedBody);
-
+    
     let response = await fetch(import.meta.env.VITE_SERVER + '/login', {
       method: "POST",
       body: stringifiedBody,
