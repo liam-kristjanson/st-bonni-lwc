@@ -15,8 +15,13 @@ console.log(process.env);
 const app = express();
 
 app.use(cors(corsOptions));
+<<<<<<< Updated upstream
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}))
+=======
+app.use(bodyParser.json({}));
+//app.use(bodyParser.urlencoded({extended: true}));
+>>>>>>> Stashed changes
 
 app.post('/login', (req, res) => {
     console.log(req.body);

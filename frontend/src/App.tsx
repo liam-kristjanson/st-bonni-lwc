@@ -2,11 +2,13 @@ import { useState } from 'react'
 import './App.css'
 import Navbar from './components/Navbar.tsx';
 import LoginCluster from './components/LoginCluster.tsx'
+import { useNavigate } from 'react-router-dom';
 
 function App() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [email, setEmail] = useState<String>('');
   const [password, setPassword] = useState<String>('');
+  const navigate = useNavigate();
 
   function handleEmailChange(newEmail: String) {
     setEmail(newEmail);
@@ -20,17 +22,17 @@ function App() {
     e.preventDefault();
     console.log("Processing login...");
     setIsLoading(true);
-    let stringifiedBody=JSON.stringify({
-      email: email,
-      password: password
-    })
-    let reqHeaders = {
-      'content-type':"application/json"
+
+    const reqHeaders = {
+      "content-type" : "application/json"
     }
-    
+
     let response = await fetch(import.meta.env.VITE_SERVER + '/login', {
       method: "POST",
-      body: stringifiedBody,
+      body: JSON.stringify({
+        email: email,
+        password: password
+      }),
       headers: reqHeaders
     });
 
@@ -43,11 +45,8 @@ function App() {
     <>
 
       <div className='container'>
-        <div className="row mb-5">
-          <div className="col">
-            <Navbar/>
-          </div>
-        </div>
+
+        <Navbar/>
 
         <h1 className="text-primary">Log In</h1>
 
@@ -62,6 +61,8 @@ function App() {
           </div>
         </div>
       </div>
+
+      <a onClick={() => navigate('/about-us')}>About us</a>
     </>
   )
 }
