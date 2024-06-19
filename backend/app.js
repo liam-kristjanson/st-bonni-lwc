@@ -15,6 +15,7 @@ console.log(process.env);
 const app = express();
 
 app.use(cors(corsOptions));
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}))
 
 app.post('/login', (req, res) => {
