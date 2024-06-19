@@ -9,7 +9,7 @@ export default function Navbar() {
 
         <div className="row mb-5">
             <div className="col">
-                <nav className="d-flex justify-content-between w-100 border-bottom border-dark">
+                <nav className="d-flex justify-content-between align-items-center w-100 border-bottom border-dark p-3">
                     <h3 onClick={() => navigate('/')} className="text-primary pe-auto" role="button"><Icon path={mdiGrass} size={1.3}/> St Bonni LWC</h3>
 
                     <div id="nav-links-md" className="d-none d-md-flex gap-2 justify-content-around">
