@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import './App.css'
 import Navbar from './components/Navbar.tsx';
 import LoginCluster from './components/LoginCluster.tsx'
 import { useNavigate } from 'react-router-dom';
@@ -48,7 +47,11 @@ function App() {
 
         <Navbar/>
 
-        <h1 className="text-primary">Log In</h1>
+        <div className='row justify-content-center'>
+          <div className='col-12'>
+            <h1 className="text-primary text-center">Log In</h1>
+          </div>
+        </div>
 
         <div className="row justify-content-center">
           <div className="col-xl-6 col-lg-8 col-md-10">
@@ -61,8 +64,6 @@ function App() {
           </div>
         </div>
       </div>
-
-      <a onClick={() => navigate('/about-us')}>About us</a>
     </>
   )
 }
