@@ -20,13 +20,19 @@ function App() {
     e.preventDefault();
     console.log("Processing login...");
     setIsLoading(true);
+    let stringifiedBody=JSON.stringify({
+      email: email,
+      password: password
+    })
+    let reqHeaders = {
+      'content-type':"application/json"
+    }
+    console.log(stringifiedBody);
 
     let response = await fetch(import.meta.env.VITE_SERVER + '/login', {
       method: "POST",
-      body: JSON.stringify({
-        email: email,
-        password: password
-      })
+      body: stringifiedBody,
+      headers: reqHeaders
     });
 
     const result = await response.json();
