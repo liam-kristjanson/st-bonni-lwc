@@ -2,12 +2,11 @@
 //import Button from 'react-bootstrap/Button';
 
 interface PromotionOfferedProps{
-mainHeading: String;
-price: String;
-promotionContent: String;
-promotionSubscription: String;
-
-
+    mainHeading: String;
+    price: String;
+    promotionContent: String;
+    promotionSubscription: String;
+    secondaryHeading: String;
 }
 
 
@@ -23,12 +22,11 @@ const PromotionOffered = (props:PromotionOfferedProps) => {
             <div className=" row font-weight-semibold text-success justify-content-center ">
                 <div className="col justify-content-center align-content-center">
                     <h3 className="font-weight-bolder">{props.mainHeading}</h3>
-                    <h1>{props.price}</h1>
-                    <p>Lorem Ipsum</p> <br></br>
+                    <h1 className="mb-2">{props.price}</h1>
                     
                     <p>{props.promotionContent}</p>
                     <hr className=" border border-3 border-opacity-100 border-primary"/>
-                    <h5>{props.promotionContent}</h5>
+                    <h5>{props.secondaryHeading}</h5>
                     <p>{props.promotionContent}</p>
                     <h5>{props.promotionSubscription}</h5>
                 </div>
