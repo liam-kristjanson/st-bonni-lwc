@@ -4,6 +4,8 @@ import LoginCluster from "../components/LoginCluster.tsx";
 import { useAuth } from "../hooks/useAuth.tsx";
 import useNavbar from "../components/hooks/useNavbar.tsx";
 import Serves from "./Serves.tsx";
+import HeroGraphic from "../components/HeroGraphic.tsx";
+import { mdiGrass } from "@mdi/js";
 
 function App() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -59,8 +61,15 @@ function App() {
           menuShowHandler={handleMenuShow}
           menuHideHandler={handleMenuHide}
         />
+      </div>
 
-        <div
+      <HeroGraphic
+        imageSource="/house-lawn-cropped-3.jpg"
+        graphicText="St. Boniface Lawn and Window Care"
+        iconPath={mdiGrass}
+      />
+
+        {/* <div
           style={{
             position: "relative",
             height: "50vh",
@@ -100,9 +109,18 @@ function App() {
           >
             Your satisfaction is my ultimate goal, and I won't rest until your
             lawn is the envy of the neighborhood.
+          </div> */}
+
+      <div className="container">
+        
+        <div className="row">
+          <div className="col">
+            <h1 className="text-primary mb-3">Our Services</h1>
+            <hr/>
+            <Serves />
           </div>
         </div>
-        <Serves />
+        
       </div>
     </>
   );
