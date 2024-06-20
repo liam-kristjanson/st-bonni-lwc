@@ -1,14 +1,21 @@
-import { Accordion, Card } from "react-bootstrap";
+import { Card } from "react-bootstrap";
 import Navbar from "../components/Navbar";
 import Icon from "@mdi/react";
 import { mdiAccountTie, mdiInformationOutline } from "@mdi/js";
+import useNavbar from "../components/hooks/useNavbar";
 
 export default function AboutUs() {
+    const {showMenu, handleMenuShow, handleMenuHide} = useNavbar();
+
     return (
         <>
             <div className="container">
 
-                <Navbar/>
+                <Navbar
+                    showMenu={showMenu}
+                    menuHideHandler={handleMenuHide}
+                    menuShowHandler={handleMenuShow}
+                />
 
                 <div className="row justify-content-center">
                     <div className="col-xl-8 col">
@@ -37,7 +44,7 @@ export default function AboutUs() {
                 </div>
 
                 <div className="row justify-content-center">
-                    <div className="d-flex col-xs-12 col-md-6 col-lg-4 col-xl-2 justify-content-center align-items-center">
+                    <div className="d-flex col-xs-12 col-md-6 col-lg-4 col-xl-3 mb-4 justify-content-center align-items-center">
                         <Card className="align-self-center" style={{width: '18rem'}}>
                             <Card.Img variant="top" src="EricDornez.jpeg" />
                             <Card.Body>
@@ -52,7 +59,7 @@ export default function AboutUs() {
                         </Card>
                     </div>
 
-                    <div className="d-flex col-xs-12 col-md-6 col-lg-4 col-xl-2 justify-content-center align-items-center">
+                    <div className="d-flex col-xs-12 col-md-6 col-lg-4 col-xl-3 mb-4 justify-content-center align-items-center">
                         <Card className="align-self-center" style={{width: '18rem'}}>
                             <Card.Img variant="top" src="EricDornez.jpeg" />
                             <Card.Body>
@@ -67,7 +74,7 @@ export default function AboutUs() {
                         </Card>
                     </div>
 
-                    <div className="d-flex col-xs-12 col-md-6 col-lg-4 col-xl-2 justify-content-center align-items-center">
+                    <div className="d-flex col-xs-12 col-md-6 col-lg-4 col-xl-3 mb-4 justify-content-center align-items-center">
                         <Card className="align-self-center" style={{width: '18rem'}}>
                             <Card.Img variant="top" src="EricDornez.jpeg" />
                             <Card.Body>

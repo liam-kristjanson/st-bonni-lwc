@@ -2,12 +2,15 @@ import { useState } from 'react'
 import Navbar from '../components/Navbar.tsx';
 import LoginCluster from '../components/LoginCluster.tsx'
 import { useAuth } from '../hooks/useAuth.tsx';
+import useNavbar from '../components/hooks/useNavbar.tsx';
 
 function App() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [email, setEmail] = useState<String>('');
   const [password, setPassword] = useState<String>('');
-  const { login } = useAuth();
+
+  const { login, user } = useAuth();
+const {showMenu, handleMenuShow, handleMenuHide} = useNavbar();
 
   function handleEmailChange(newEmail: String) {
     setEmail(newEmail);
@@ -52,7 +55,11 @@ function App() {
 
       <div className='container'>
 
-        <Navbar/>
+        <Navbar
+          showMenu={showMenu}
+          menuShowHandler={handleMenuShow}
+          menuHideHandler={handleMenuHide}
+        />
 
         <div className='row justify-content-center'>
           <div className='col-12'>
@@ -66,6 +73,8 @@ function App() {
           emailChangeHandler={handleEmailChange}
           isLoading = {isLoading}
         />
+
+        <p>User data: {JSON.stringify(user)}</p>
 
         
       </div>
