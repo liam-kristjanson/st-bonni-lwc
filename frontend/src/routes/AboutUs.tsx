@@ -19,7 +19,7 @@ export default function AboutUs() {
             </div>
 
                 <div style={{
-                    backgroundImage: "url('/grass-60-dark.jpg')",
+                    backgroundImage: "url('/house-lawn-cropped.jpg')",
                     backgroundPosition: "center",
                     backgroundSize: "cover",
                     height: "50vh"
