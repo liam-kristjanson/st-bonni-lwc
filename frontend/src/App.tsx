@@ -3,6 +3,7 @@ import './App.css'
 import Navbar from './components/Navbar.tsx';
 import LoginCluster from './components/LoginCluster.tsx'
 import { useNavigate } from 'react-router-dom';
+import PromotionOffered from './components/PromotionOffered.tsx';
 
 function App() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -63,6 +64,9 @@ function App() {
       </div>
 
       <a onClick={() => navigate('/about-us')}>About us</a>
+      <a onClick={() => navigate('/servings')}>Serves</a>
+      
+      <PromotionOffered/>
     </>
   )
 }
