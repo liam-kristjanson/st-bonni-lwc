@@ -1,16 +1,17 @@
-import { useState } from 'react'
-import Navbar from '../components/Navbar.tsx';
-import LoginCluster from '../components/LoginCluster.tsx'
-import { useAuth } from '../hooks/useAuth.tsx';
-import useNavbar from '../components/hooks/useNavbar.tsx';
+import { useState } from "react";
+import Navbar from "../components/Navbar.tsx";
+import LoginCluster from "../components/LoginCluster.tsx";
+import { useAuth } from "../hooks/useAuth.tsx";
+import useNavbar from "../components/hooks/useNavbar.tsx";
+import Serves from "./Serves.tsx";
 
 function App() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [email, setEmail] = useState<String>('');
-  const [password, setPassword] = useState<String>('');
+  const [email, setEmail] = useState<String>("");
+  const [password, setPassword] = useState<String>("");
 
   const { login, user } = useAuth();
-const {showMenu, handleMenuShow, handleMenuHide} = useNavbar();
+  const { showMenu, handleMenuShow, handleMenuHide } = useNavbar();
 
   function handleEmailChange(newEmail: String) {
     setEmail(newEmail);
@@ -26,22 +27,22 @@ const {showMenu, handleMenuShow, handleMenuHide} = useNavbar();
     setIsLoading(true);
 
     const reqHeaders = {
-      "content-type" : "application/json"
-    }
+      "content-type": "application/json",
+    };
 
-    let response = await fetch(import.meta.env.VITE_SERVER + '/login', {
+    let response = await fetch(import.meta.env.VITE_SERVER + "/login", {
       method: "POST",
       body: JSON.stringify({
         email: email,
-        password: password
+        password: password,
       }),
-      headers: reqHeaders
+      headers: reqHeaders,
     });
 
     if (response.ok) {
       let authData = await response.json();
       login(authData);
-      alert("Logged in successfuly")
+      alert("Logged in successfuly");
     } else {
       let errorData = await response.json();
       alert(errorData.error);
@@ -52,34 +53,59 @@ const {showMenu, handleMenuShow, handleMenuHide} = useNavbar();
 
   return (
     <>
-
-      <div className='container'>
-
+      <div className="container">
         <Navbar
           showMenu={showMenu}
           menuShowHandler={handleMenuShow}
           menuHideHandler={handleMenuHide}
         />
 
-        <div className='row justify-content-center'>
-          <div className='col-12'>
-            <h1 style={{'backgroundImage' : '/image.jpg'}}className="text-primary text-center">Log In</h1>
+        <div
+          style={{
+            position: "relative",
+            height: "50vh",
+            width: "100%",
+            overflow: "hidden",
+          }}
+        >
+          {" "}
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              height: "100%",
+              width: "100%",
+              backgroundImage: `url(/lawnImage.jpg)`,
+              backgroundPosition: "center",
+              backgroundSize: "cover",
+              filter: "blur(1px)",
+              zIndex: 1,
+            }}
+          ></div>
+          <div
+            style={{
+              position: "relative",
+              zIndex: 1,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100%",
+              textAlign: "center",
+              color: "white",
+              fontSize: "2em",
+              fontWeight: "bold",
+              textShadow: "2px 2px 5px rgba(0, 0, 0, 0.5)",
+            }}
+          >
+            Your satisfaction is my ultimate goal, and I won't rest until your
+            lawn is the envy of the neighborhood.
           </div>
         </div>
-
-        <LoginCluster
-          submitHandler={handleSubmit}
-          passwordChangeHandler={handlePasswordChange}
-          emailChangeHandler={handleEmailChange}
-          isLoading = {isLoading}
-        />
-
-        <p>User data: {JSON.stringify(user)}</p>
-
-        
+        <Serves />
       </div>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
