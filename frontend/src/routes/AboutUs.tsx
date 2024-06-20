@@ -16,11 +16,26 @@ export default function AboutUs() {
                     menuHideHandler={handleMenuHide}
                     menuShowHandler={handleMenuShow}
                 />
+            </div>
+
+                <div style={{
+                    backgroundImage: "url('/grass-60-dark.jpg')",
+                    backgroundPosition: "center",
+                    backgroundSize: "cover",
+                    height: "50vh"
+                }}
+                className="w-100 d-flex flex-column justify-content-center align-items-center mb-5">
+                    <h1 className="text-white text-center display-1"><Icon path={mdiInformationOutline} size={2.0}/> About us</h1>
+                    <hr className="border border-white border-3 opacity-100 w-75"/>
+                </div>
+
+            <div className="container">
+
+                
 
                 <div className="row justify-content-center">
                     <div className="col-xl-8 col">
-                        <h1 className="text-primary"><Icon path={mdiInformationOutline} size={1.4}/> About us</h1>
-                        <hr className="mb-5"/>
+                        
 
                         <h3 className="text-primary">A Craftsman's Touch</h3>
                         <p className="text-muted">The sun beats down, but a smile spreads across my face as I expertly maneuver the mower, each stripe a testament to a decade of experience. The familiar scent of freshly cut grass fills the air, a reminder of countless lawns transformed into lush, vibrant landscapes. I pause to admire the perfectly manicured expanse, envisioning the delighted reactions of my clients</p>
