@@ -47,7 +47,7 @@ export default function Navbar(props: NavbarProps) {
                             <Button className="w-100 fw-bold text-white btn-lg" variant="primary">Window Services</Button>
                             <Button onClick={() => navigate('/about-us')} className="w-100 fw-bold text-white btn-lg" variant="primary">About Us</Button>
                             <Button className="w-100 fw-bold text-white btn-lg mb-5" variant="primary">Contact</Button>
-                            <Button className="w-100 fw-bold text-white btn-lg" variant="primary">Book a Service!</Button>
+                            <Button className="w-100 fw-bold text-white btn-lg" variant="warning">Book a Service!</Button>
 
                         </div>
                     </div>
