@@ -1,33 +1,55 @@
-//import React from "react";
-//import Button from 'react-bootstrap/Button';
-
 import PromotionOffered from "../components/PromotionOffered";
 
-
 const Serves = () => {
-    return(
-        <>
-          <div className=" container">
-            <div className="row">
+  return (
+    <>
+      <div className="container">
+        <div className="row">
+          <div className="col-xl-4 col-md-6 col-sm-12">
+            <PromotionOffered
+              price="$400"
+              mainHeading={"Basic Offer"}
+              secondaryHeading={"Lawn Mowing"}
+              promotionContent={
+                "Get your lawn mowed by our professional team. We ensure a neat and well-maintained lawn that enhances the beauty of your property."
+              }
+              promotionSubscription={"Weekly or bi-weekly service available."}
+              discountPercentage={10}
+            />
+          </div>
 
-                <div className="col-xl-4 col-md-6 col-sm-12">
-                    <PromotionOffered price="$400" mainHeading={"Basic Offer"} secondaryHeading={"Secondary Heading"} promotionContent={"s simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsu"} promotionSubscription={"Brief Description"}/>
-                </div>
-                
-                <div className="col-xl-4 col-md-6 col-sm-12">
-                    <PromotionOffered price="$600" mainHeading={"Medium Offer"}secondaryHeading={"Secondary Heading"} promotionContent={"s simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsu"} promotionSubscription={"Brief Description"}/>
-                </div>
+          <div className="col-xl-4 col-md-6 col-sm-12">
+            <PromotionOffered
+              price="$600"
+              mainHeading={"Medium Offer"}
+              secondaryHeading={"Lawn Fertilization"}
+              promotionContent={
+                "Get your lawn mowed by our professional team. We ensure a neat and well-maintained lawn that enhances the beauty of your property"
+              }
+              promotionSubscription={
+                "Seasonal fertilization packages available."
+              }
+              discountPercentage={20}
+            />
+          </div>
 
-                <div className="col-xl-4 col-md-6 col-sm-12">
-                    <PromotionOffered price="$1000" mainHeading={"Advanced Offer"}secondaryHeading={"Secondary Heading"} promotionContent={"s simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsu"} promotionSubscription={"Brief Description"}/>
-                </div>
-            </div>
-
+          <div className="col-xl-4 col-md-6 col-sm-12">
+            <PromotionOffered
+              price="$1000"
+              mainHeading={"Advanced Offer"}
+              secondaryHeading={"Lawn Aeration"}
+              promotionContent={
+                "Get your lawn mowed by our professional team. We ensure a neat and well-maintained lawn that enhances the beauty of your property."
+              }
+              promotionSubscription={
+                "Recommended once a year for best results."
+              }
+              discountPercentage={100}
+            />
+          </div>
         </div>
-        </>
-    );
-
-
-
+      </div>
+    </>
+  );
 };
 export default Serves;

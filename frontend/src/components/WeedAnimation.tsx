@@ -7,8 +7,7 @@ import { useEffect } from "react";
 AOS.init();
 import { Container, Row, Col } from "react-bootstrap";
 
-export default function () {
-  
+const WeedAnimation = () => {
   const isAbove983px = useMediaQuery({ minWidth: 983 });
   const isAbove550px = useMediaQuery({ minWidth: 300 });
 
@@ -136,4 +135,6 @@ export default function () {
       </Row>
     </Container>
   );
-}
+};
+
+export default WeedAnimation;
