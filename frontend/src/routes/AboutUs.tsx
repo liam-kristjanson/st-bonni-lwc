@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar";
 import Icon from "@mdi/react";
 import { mdiAccountTie, mdiInformationOutline } from "@mdi/js";
 import useNavbar from "../components/hooks/useNavbar";
+import HeroGraphic from "../components/HeroGraphic";
 
 export default function AboutUs() {
     const {showMenu, handleMenuShow, handleMenuHide} = useNavbar();
@@ -18,21 +19,13 @@ export default function AboutUs() {
                 />
             </div>
 
-                <div style={{
-                    backgroundImage: "url('/grass-60-dark.jpg')",
-                    backgroundPosition: "center",
-                    backgroundSize: "cover",
-                    height: "50vh"
-                }}
-                className="w-100 d-flex flex-column justify-content-center align-items-center mb-5">
-                    <h1 className="text-white text-center display-1"><Icon path={mdiInformationOutline} size={2.0}/> About us</h1>
-                    <hr className="border border-white border-3 opacity-100 w-75"/>
-                </div>
+            <HeroGraphic
+                imageSource="/house-lawn-cropped.jpg"
+                graphicText=" About us"
+                iconPath={mdiInformationOutline}
+            />
 
             <div className="container">
-
-                
-
                 <div className="row justify-content-center">
                     <div className="col-xl-8 col">
                         
