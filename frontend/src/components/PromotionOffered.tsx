@@ -1,44 +1,61 @@
-//import React from "react";
-//import Button from 'react-bootstrap/Button';
+import { useState } from "react";
 
-interface PromotionOfferedProps{
-    mainHeading: string;
-    price: string;
-    promotionContent: string;
-    promotionSubscription: string;
-    secondaryHeading: string;
+interface PromotionOfferedProps {
+  mainHeading: string;
+  price: string;
+  promotionContent: string;
+  promotionSubscription: string;
+  secondaryHeading: string;
+  discountPercentage:number;
 }
 
+const PromotionOffered = (props: PromotionOfferedProps) => {
+  const [discount, setDiscount] = useState(false);
+  const discountPercentage = props.discountPercentage / 100;
+  const originalPrice = parseFloat(props.price.replace("$", ""));
+  const discountedPrice = originalPrice * (1 - discountPercentage);
 
-const PromotionOffered = (props:PromotionOfferedProps) => {
-    return(        
-        <div className=" container border border-success-subtle border-5 rounded-5 shadow-lg  text-wrap overflow-hidden">
-            <div className="row overflow-hidden ">
-                <div className=" col-6 bg-primary rounded overflow-hidden fw-bolder">
-                Most Popular
-                </div>
-            </div>
+  return (
+    <div className="container border rounded shadow-lg p-4 my-4 text-center">
+      <div className="badge bg-primary text-uppercase mb-3">Most Popular</div>
+      <div >
+        <div className="col-md-8 mx-auto">
+          <h3 className="text-success fw-bold">{props.mainHeading}</h3>
 
-            <div className=" row font-weight-semibold text-success justify-content-center ">
-                <div className="col justify-content-center align-content-center">
-                    <h3 className="font-weight-bolder">{props.mainHeading}</h3>
-                    <h1 className="mb-2">{props.price}</h1>
-                    
-                    <p>{props.promotionContent}</p>
-                    <hr className=" border border-3 border-opacity-100 border-primary"/>
-                    <h5>{props.secondaryHeading}</h5>
-                    <p>{props.promotionContent}</p>
-                    <h5>{props.promotionSubscription}</h5>
-                </div>
-            </div>
+          <div className="mb-4">
+            {discount && (
+              <h1 className="display-4 text-decoration-line-through text-muted">
+                ${originalPrice.toFixed(2)}
+              </h1>
+            )}
+            <h1
+              className={`display-4 text-success ${
+                discount ? "discounted" : ""
+              }`}
+            >
+              $
+              {discount ? discountedPrice.toFixed(2) : originalPrice.toFixed(2)}
+            </h1>
+            <button
+              className="btn btn-link"
+              onClick={() => setDiscount(!discount)}
+            >
+              {discount ? "Remove Discount" : `Apply ${discountPercentage*100}% Off`}
+            </button>
+          </div>
 
-        
-            <div className="d-flex justify-content-between overflow-hidden row text-center">
-                <button className="btn btn-primary align-items-center fw-bold col" type="button">Make Offer</button>
-                <button className="btn btn-warning align-items-center  fw-bold col" type="button">Book Now</button>
-            </div>
-
+          <p className="lead mb-4">{props.promotionContent}</p>
+          <hr className="border-primary" />
+          <h5 className="text-primary">{props.secondaryHeading}</h5>
+          <p className="mb-4">{props.promotionSubscription}</p>
+          <div className="d-grid gap-2 d-md-flex justify-content-md-center">
+            <button className="btn btn-primary btn-md">Make Offer</button>
+            <button className="btn btn-outline-primary btn-md">Book Now</button>
+          </div>
         </div>
-    );
+      </div>
+    </div>
+  );
 };
+
 export default PromotionOffered;
