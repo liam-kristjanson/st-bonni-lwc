@@ -2,11 +2,11 @@
 //import Button from 'react-bootstrap/Button';
 
 interface PromotionOfferedProps{
-    mainHeading: String;
-    price: String;
-    promotionContent: String;
-    promotionSubscription: String;
-    secondaryHeading: String;
+    mainHeading: string;
+    price: string;
+    promotionContent: string;
+    promotionSubscription: string;
+    secondaryHeading: string;
 }
 
 

@@ -1,4 +1,3 @@
-import { mdiInformationOutline } from "@mdi/js";
 import Icon from "@mdi/react";
 
 interface HeroGraphicProps {

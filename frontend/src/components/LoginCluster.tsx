@@ -2,8 +2,8 @@ import React from "react";
 import { Button, Form, Spinner } from "react-bootstrap";
 
 interface LoginClusterProps {
-    emailChangeHandler: (email: String) => void;
-    passwordChangeHandler: (password: String) => void;
+    emailChangeHandler: (email: string) => void;
+    passwordChangeHandler: (password: string) => void;
     submitHandler: (e : React.FormEvent<HTMLFormElement>) => void;
     isLoading: boolean;
 }
