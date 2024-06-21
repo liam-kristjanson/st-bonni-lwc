@@ -23,16 +23,24 @@ export default function Navbar(props: NavbarProps) {
         {
             "route": "/lawn-services",
             "text": "Lawn Services",
+            "buttonClasses": "text-white"
         },
         {
             "route": "/about-us",
             "text": "About Us",
+            "buttonClasses": "text-white",
         },
         {
             "route": "/contact",
             "text": "Contact",
-            "buttonClasses": "mb-5"
+            "buttonClasses": "mb-5 text-white",
         },
+        {
+            "route": "/booking-availability",
+            "text": "Book now",
+            "buttonVariant": "warning",
+            "buttonClasses": "text-black"
+        }
     ]
 
     return (
@@ -81,7 +89,7 @@ export default function Navbar(props: NavbarProps) {
 
                             {links.map(link => (
                                 <Button 
-                                    className={"w-100 fw-bold text-white btn-lg " + link.buttonClasses} 
+                                    className={"w-100 fw-bold btn-lg " + link.buttonClasses} 
                                     variant={link.buttonVariant ?? "primary"}
                                     onClick={() => navigate(link.route)}
                                 >
