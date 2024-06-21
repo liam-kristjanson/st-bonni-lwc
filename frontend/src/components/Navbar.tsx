@@ -25,10 +25,6 @@ export default function Navbar(props: NavbarProps) {
             "text": "Lawn Services",
         },
         {
-            "route": "/window-services",
-            "text": "Window Services",
-        },
-        {
             "route": "/about-us",
             "text": "About Us",
         },
@@ -37,11 +33,6 @@ export default function Navbar(props: NavbarProps) {
             "text": "Contact",
             "buttonClasses": "mb-5"
         },
-        {
-            "route": "/book-service",
-            "text": "Book Now",
-            "buttonVariant": "warning",
-        }
     ]
 
     return (
