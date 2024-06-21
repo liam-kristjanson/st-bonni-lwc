@@ -16,7 +16,7 @@ import Button from "react-bootstrap/Button";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useMediaQuery } from "react-responsive";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 AOS.init();
 
 function App() {
@@ -30,7 +30,7 @@ function App() {
     setTimeout(() => {
       AOS.refresh();
     }, 500);
-  }, [AOS, setTimeout])
+  }, [])
 
   return (
     <>
