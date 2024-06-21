@@ -7,8 +7,10 @@ export default function Navbar() {
 
     return (
 
-        <div className="row mb-5">
+        <div className="row">
             <div className="col">
+                <div className="mb-1"></div>
+
                 <nav className="d-flex justify-content-between w-100 border-bottom border-dark">
                     <h3 onClick={() => navigate('/')} className="text-primary pe-auto" role="button"><Icon path={mdiGrass} size={1.3}/> St Bonni LWC</h3>
 
