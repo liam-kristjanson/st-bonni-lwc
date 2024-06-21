@@ -4,6 +4,7 @@ import LoginCluster from "../components/LoginCluster.tsx";
 import { useAuth } from "../hooks/useAuth.tsx";
 import useNavbar from "../components/hooks/useNavbar.tsx";
 import Serves from "./Serves.tsx";
+import Footer from "../components/Footer.tsx";
 
 function App() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -104,6 +105,7 @@ function App() {
         </div>
         <Serves />
       </div>
+      <Footer/>
     </>
   );
 }
