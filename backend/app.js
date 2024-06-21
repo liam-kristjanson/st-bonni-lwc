@@ -1,5 +1,6 @@
 require('dotenv').config();
 
+const dbRetriever = require('./dbretriever');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -37,6 +38,12 @@ app.post('/login', (req, res) => {
     } else (
         res.status(401).send({error: "Invalid username or password"})
     )
+})
+
+app.get('/user', (req, res) => {
+    dbRetriever.fetchOneDocument('users', {username: 'admin'}).then(user => {
+        res.send(user);
+    })
 })
 
 app.listen(PORT, () => {
