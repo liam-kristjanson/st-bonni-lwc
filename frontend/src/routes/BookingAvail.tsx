@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar"
 
 import Calendar from 'react-calendar';
 import "../components/styles/ReactCalendar.css"
+import useNavbar from '../components/hooks/useNavbar';
 
 type ValuePiece = Date | null;
 
@@ -11,11 +12,16 @@ type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 export default function BookingAvail() {
     const [value, onChange] = useState<Value>(new Date());
+    const {showMenu, handleMenuShow, handleMenuHide} = useNavbar();
 
     return (
         <>
             <div className="container">
-                <Navbar/>
+                <Navbar
+                        showMenu={showMenu}
+                        menuHideHandler={handleMenuHide}
+                        menuShowHandler={handleMenuShow}
+                    />
             </div>
             
             <div className="container-fluid" style={{"zIndex": "-2", "paddingBottom": "750px", "backgroundImage": "url(/grassPatternGrey.png)", "backgroundSize": "100% auto", "backgroundRepeat": "repeat"}}>

@@ -19,8 +19,24 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}))
 
 app.post('/login', (req, res) => {
-    console.log(req.body);
-    res.json({message: "Login processing..."})
+    const exampleUser = {
+        id: '1',
+        name: 'John Doe',
+        email: 'john.doe@email.com',
+        password: 'password'
+    }
+
+    if (req.body.email === exampleUser.email && req.body.password === exampleUser.password) {
+        const authData = {
+            id: exampleUser.id,
+            name: exampleUser.name,
+            email: exampleUser.email
+        }
+
+        res.send(authData);
+    } else (
+        res.status(401).send({error: "Invalid username or password"})
+    )
 })
 
 app.listen(PORT, () => {
