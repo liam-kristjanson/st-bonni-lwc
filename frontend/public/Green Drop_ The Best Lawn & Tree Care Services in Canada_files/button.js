@@ -1,1 +1,0 @@
-(function() {window.__8x8Chat.renderButton("<a href='#' data-type='online'><img src='##path##/shared/CHAT/R1JFRU5EUk9Q/button_1571703167602aac1265ec80.91349747/img/logo' style='border: 0;'></a>");})();
