@@ -49,12 +49,12 @@ export default function Navbar(props: NavbarProps) {
             <div className="row">
                 <div className="col">
                     <nav className="d-flex justify-content-between align-items-center w-100 border-bottom border-dark p-3">
-                        <h3 onClick={() => navigate('/')} className="text-primary pe-auto" role="button"><Icon path={mdiGrass} size={1.3}/> St Bonni LWC</h3>
+                        <h3 onClick={() => navigate('/')} className="link-primary pe-auto" role="button"><Icon path={mdiGrass} size={1.3}/> St Bonni LWC</h3>
 
                         <div id="nav-links-md" className="d-none d-md-flex gap-2 justify-content-around">
 
                             {links.map((link) => (
-                                <a className={"d-block text-primary"}
+                                <a className={"d-block link-primary"}
                                 role="button" 
                                 onClick={() => navigate(link.route)}
                                 >
