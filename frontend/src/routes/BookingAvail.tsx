@@ -24,7 +24,7 @@ export default function BookingAvail() {
                     />
             </div>
             
-            <div className="container-fluid" style={{"zIndex": "-2", "paddingBottom": "750px", "backgroundImage": "url(/grassPatternGrey.png)", "backgroundSize": "100% auto", "backgroundRepeat": "repeat"}}>
+            <div className="container-fluid" style={{"paddingBottom": "750px", "backgroundImage": "url(/grassPatternGrey.png)", "backgroundSize": "100% auto", "backgroundRepeat": "repeat"}}>
                 <div style={{"paddingBottom": "40px"}}></div>
                 
                 <div className="row text-center">
@@ -36,8 +36,6 @@ export default function BookingAvail() {
                 <div style={{"paddingBottom": "40px"}}></div>
 
                 <div className="row">
-                    <div className="bg-white position-absolute border border-5" style={{"zIndex": "-1", "width": "300px", "height": "300px"}}>&nbsp;</div>
-
                     <div className="col d-flex justify-content-center">
 
                         <Calendar onChange={onChange}
