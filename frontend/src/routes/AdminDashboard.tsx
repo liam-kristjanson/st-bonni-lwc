@@ -1,7 +1,7 @@
-import { useAuth } from "../hooks/useAuth"
+import {useAuthContext} from "../hooks/useAuthContext"
 
 export default function AdminDashboard() {
-    const { user } = useAuth();
+    const user = useAuthContext().state.user;
     
     return (
         <>
@@ -11,7 +11,7 @@ export default function AdminDashboard() {
 
             <p>User email: {user?.email ?? "Not found"}</p>
 
-            <p>User auth token: {user?.authToken ?? "Not found"}</p>
+            <p>User auth token: {user?.token ?? "Not found"}</p>
 
             <p>Local storage user: {localStorage.getItem('user')}</p>
         </>

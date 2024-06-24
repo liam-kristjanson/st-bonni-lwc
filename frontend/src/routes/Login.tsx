@@ -3,8 +3,8 @@ import LoginCluster from "../components/LoginCluster";
 import { useState } from "react";
 import Navbar from "../components/Navbar";
 import useNavbar from "../components/hooks/useNavbar";
-import { useAuth } from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 export default function login() {
 
@@ -12,7 +12,7 @@ export default function login() {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const {showMenu, handleMenuShow, handleMenuHide} = useNavbar();
-    const { user, login, setUser } = useAuth()
+    const { dispatch } = useAuthContext();
     const navigate = useNavigate();
     
 
@@ -30,17 +30,28 @@ export default function login() {
         console.log("Processing login...");
         setIsLoading(true);
 
-        login({
-          id: '1',
-          name: 'John Doe',
-          email: 'john.doe@email.com',
+        const loginHeaders = {
+          "content-type": "application/json"
+        }
+
+        const loginBody = {
+          "email": email,
+          "password": password,
+        }
+
+        const response = await fetch(import.meta.env.VITE_SERVER + "/login", {
+          method: "POST",
+          headers: loginHeaders,
+          body: JSON.stringify(loginBody),
         });
 
-        console.log("USER")
-        console.log(user);
-
-        navigate('/admin/dashboard')
-
+        if (response.ok) {
+          const user = await response.json();
+          dispatch({type: "LOGIN", payload: { user }});
+          navigate('/admin/dashboard');
+        } else {
+          alert('Invalid username or password');
+        }
       }
 
     return (
