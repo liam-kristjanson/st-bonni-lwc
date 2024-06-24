@@ -12,6 +12,7 @@ import { FaCloudSunRain } from "react-icons/fa";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 import WeedAnimation from "../components/WeedAnimation.tsx";
 import ScrollButton from "../components/ScrollButton.tsx";
+import Footer from "../components/Footer.tsx";
 
 function App() {
   const { showMenu, handleMenuShow, handleMenuHide } = useNavbar();
@@ -71,6 +72,7 @@ function App() {
 
       {/* Animation section Got weed */}
       <WeedAnimation />
+      <Footer/>
     </>
   );
 }

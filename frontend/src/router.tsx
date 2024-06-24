@@ -5,6 +5,7 @@ import AboutUs from "./routes/AboutUs";
 import BookingAvail from "./routes/BookingAvail";
 import Serves from "./routes/Serves";
 import Contact from "./routes/Contact";
+import AdminBook from "./routes/AdminBook";
 
 export const router = createBrowserRouter([
     {
@@ -26,5 +27,9 @@ export const router = createBrowserRouter([
     {
         path:"/contact",
         element:<Contact/>
+    },
+    {
+        path: "/ad-book",
+        element:<AdminBook/>
     }
 ])
