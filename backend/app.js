@@ -31,7 +31,8 @@ app.post('/login', (req, res) => {
         const authData = {
             id: exampleUser.id,
             name: exampleUser.name,
-            email: exampleUser.email
+            email: exampleUser.email,
+            authToken: "EXAMPLE-TOKEN"
         }
 
         res.send(authData);

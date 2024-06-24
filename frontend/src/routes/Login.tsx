@@ -1,12 +1,19 @@
 import { Container } from "react-bootstrap";
 import LoginCluster from "../components/LoginCluster";
 import { useState } from "react";
+import Navbar from "../components/Navbar";
+import useNavbar from "../components/hooks/useNavbar";
+import { useAuth } from "../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 export default function login() {
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+    const {showMenu, handleMenuShow, handleMenuHide} = useNavbar();
+    const { user, login, setUser } = useAuth()
+    const navigate = useNavigate();
     
 
     function handleEmailChange(newEmail: string) {
@@ -19,31 +26,34 @@ export default function login() {
     
       async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
+
         console.log("Processing login...");
         setIsLoading(true);
-    
-        const reqHeaders = {
-          "content-type" : "application/json"
-        }
-    
-        let response = await fetch(import.meta.env.VITE_SERVER + '/login', {
-          method: "POST",
-          body: JSON.stringify({
-            email: email,
-            password: password
-          }),
-          headers: reqHeaders
+
+        login({
+          id: '1',
+          name: 'John Doe',
+          email: 'john.doe@email.com',
         });
-    
-        const result = await response.json();
-        setIsLoading(false);
-        alert(result);
+
+        console.log("USER")
+        console.log(user);
+
+        navigate('/admin/dashboard')
+
       }
 
     return (
-        
-
         <>
+          <Container>
+            <Navbar
+              showMenu={showMenu}
+              menuHideHandler={handleMenuHide}
+              menuShowHandler={handleMenuShow}
+            />
+          </Container>
+
+          <h1 className="text-primary text-center pt-3 mb-4">Log in</h1>
             <Container>
                 <LoginCluster
                     isLoading={isLoading}

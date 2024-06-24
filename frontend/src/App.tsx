@@ -5,7 +5,7 @@ import { router } from "./router";
 
 
 function App() {
-  const {user, setUser } = useAuth();
+  const {user, login, logout, setUser } = useAuth();
 
   return (
     <AuthContext.Provider value={{user, setUser}}>
