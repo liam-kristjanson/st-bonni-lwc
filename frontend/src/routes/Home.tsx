@@ -14,6 +14,7 @@ import WeedAnimation from "../components/WeedAnimation.tsx";
 import ScrollButton from "../components/ScrollButton.tsx";
 import Footer from "../components/Footer.tsx";
 
+
 function App() {
   const { showMenu, handleMenuShow, handleMenuHide } = useNavbar();
 
