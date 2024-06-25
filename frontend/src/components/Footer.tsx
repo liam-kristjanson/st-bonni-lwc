@@ -1,6 +1,6 @@
 
 import Icon from "@mdi/react";
-import { mdiGrass, mdiMenu } from '@mdi/js';
+import { mdiGrass } from '@mdi/js';
 import { mdiInstagram } from '@mdi/js';
 import { mdiFacebook } from '@mdi/js';
 import { mdiMapMarker } from '@mdi/js';
@@ -15,26 +15,26 @@ import { Col, Container, Row } from "react-bootstrap";
 
 const myStyle={
   listStyleType:'none'}
-const Footer = (p0: string) => {
+export default function Footer() {
 return(
 <>
     <footer className=" justify-content-evenly align-items-center bg-primary text-bg-light ps-3   ">
-             <div className="d-flex  mx-auto justify-content-start position-relative">
-                <h3 className="text-light pe-auto" role="button"><Icon path={mdiGrass} size={1.5}/> St Bonni LWC</h3>
-            </div>
+        <div className="d-flex  mx-auto justify-content-start position-relative">
+            <h3 className="text-light pe-auto" role="button"><Icon path={mdiGrass} size={1.5}/> St Bonni LWC</h3>
+        </div>
         <Container>
             <Row>
                 <Col>
-                <div className=" d-flex text-light pe-auto"><div>
-                    <h5 className=" justify-content-center fw-bolder align-items-center  ">Social Media</h5>
-                    <ul className=" link-underline-opacity-75-hover text-sm-end" style={myStyle}>
-                        <li><a href=" https://www.instagram.com/ "><Icon path={mdiInstagram} size={1.5} className=" d-none d-md-inline  "  /><Icon path={mdiInstagram} size={1} className=" d-md-none " /> </a> Instagram </li>
-                        <li><Icon path={mdiFacebook} size={1.5} className=" d-none d-md-inline" /><Icon path={mdiFacebook} size={1}  className=" d-md-none " /> Facebook</li>
-                        <li><Icon path={mdiLinkedin} size={1.5} className=" d-none d-md-inline" /><Icon path={mdiLinkedin} size={1} className=" d-md-none "  />Instagram</li>
-                    </ul>
-
-              </div>
-             </div>
+                <div className=" d-flex text-light pe-auto">
+                    <div>
+                        <h5 className=" justify-content-center fw-bolder align-items-center  ">Social Media</h5>
+                        <ul className=" link-underline-opacity-75-hover text-sm-end" style={myStyle}>
+                            <li><a href=" https://www.instagram.com/ "><Icon path={mdiInstagram} size={1.5} className=" d-none d-md-inline  "  /><Icon path={mdiInstagram} size={1} className=" d-md-none " /> </a> Instagram </li>
+                            <li><Icon path={mdiFacebook} size={1.5} className=" d-none d-md-inline" /><Icon path={mdiFacebook} size={1}  className=" d-md-none " /> Facebook</li>
+                            <li><Icon path={mdiLinkedin} size={1.5} className=" d-none d-md-inline" /><Icon path={mdiLinkedin} size={1} className=" d-md-none "  />Instagram</li>
+                        </ul>
+                    </div>
+                </div>
                 </Col>
 
                 
@@ -99,18 +99,9 @@ return(
                     </div>
                  </div>
                 </Col>
-
-
-                    </Row>
-        </Container>
-                
-                
+            </Row>
+        </Container>  
     </footer>
-
-        
-     
-        
-       </>
+</>
 )
 };
-export default Footer;

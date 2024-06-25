@@ -74,6 +74,7 @@ function App() {
       {/* Animation section Got weed */}
       <WeedAnimation />
       <Footer/>
+      
     </>
   );
 }

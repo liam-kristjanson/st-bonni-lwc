@@ -6,6 +6,7 @@ import BookingAvail from "./routes/BookingAvail";
 import Serves from "./routes/Serves";
 import Contact from "./routes/Contact";
 import AdminBook from "./routes/AdminBook";
+import Login from "./routes/Login";
 
 export const router = createBrowserRouter([
     {
@@ -31,5 +32,9 @@ export const router = createBrowserRouter([
     {
         path: "/ad-book",
         element:<AdminBook/>
+    }, 
+    {
+        path:"/login",
+        element:<Login/>
     }
 ])
