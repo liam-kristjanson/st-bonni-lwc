@@ -2,56 +2,96 @@ import { Container } from "react-bootstrap";
 import LoginCluster from "../components/LoginCluster";
 import { useState } from "react";
 
-export default function login() {
+export default function Login() {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [email, setEmail] = useState<string>('');
-    const [password, setPassword] = useState<string>('');
-    
+  function handleEmailChange(newEmail: string) {
+    setEmail(newEmail);
+  }
 
-    function handleEmailChange(newEmail: string) {
-        setEmail(newEmail);
+  function handlePasswordChange(newPassword: string) {
+    setPassword(newPassword);
+  }
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    console.log("Processing login...");
+    setIsLoading(true);
+    setErrorMessage(""); 
+
+    const reqHeaders = {
+      "content-type": "application/json",
+    };
+
+    try {
+      let response = await fetch(`${import.meta.env.VITE_SERVER}/login`, {
+        method: "POST",
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+        headers: reqHeaders,
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "Login failed");
+      }
+
+      console.log("Login successful:", result);
+      localStorage.setItem('token', result.token);
+    } catch (error) {
+      console.error("Login error:", error);
+      setErrorMessage("Invalid email or password");
+    } finally {
+      setIsLoading(false);
     }
-    
-      function handlePasswordChange(newPassword: string) {
-        setPassword(newPassword);
-      }
-    
-      async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-        e.preventDefault();
-        console.log("Processing login...");
-        setIsLoading(true);
-    
-        const reqHeaders = {
-          "content-type" : "application/json"
-        }
-    
-        let response = await fetch(import.meta.env.VITE_SERVER + '/login', {
+  }
+
+  async function handleForgotPassword(email: string, newPassword: string) {
+    const reqHeaders = {
+      "content-type": "application/json",
+    };
+
+    try {
+      let response = await fetch(
+        `${import.meta.env.VITE_SERVER}/reset-password`,
+        {
           method: "POST",
-          body: JSON.stringify({
-            email: email,
-            password: password
-          }),
-          headers: reqHeaders
-        });
-    
-        const result = await response.json();
-        setIsLoading(false);
-        alert(result);
+          body: JSON.stringify({ email, newPassword }),
+          headers: reqHeaders,
+        }
+      );
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "Failed to reset password");
       }
 
-    return (
-        
+      console.log("Password reset successfully");
+    } catch (error) {
+      console.error("Password reset error:", error);
+      throw error;
+    }
+  }
 
-        <>
-            <Container>
-                <LoginCluster
-                    isLoading={isLoading}
-                    submitHandler={handleSubmit}
-                    passwordChangeHandler={handlePasswordChange}
-                    emailChangeHandler={handleEmailChange}
-                />
-            </Container>
-        </>
-    )
+  return (
+    <>
+      <Container>
+        <LoginCluster
+          emailChangeHandler={handleEmailChange}
+          passwordChangeHandler={handlePasswordChange}
+          submitHandler={handleSubmit}
+          forgotPasswordHandler={handleForgotPassword}
+          isLoading={isLoading}
+          errorMessage={errorMessage}
+        />
+      </Container>
+    </>
+  );
 }
