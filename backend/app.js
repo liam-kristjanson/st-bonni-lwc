@@ -28,6 +28,13 @@ app.post("/login", authController.handleLogin);
 
 app.post("/reset-password", authController.resetPassword);
 
+app.get("/bookings", (req, res) => {
+    dbRetriever.fetchDocuments("bookings", {})
+    .then(bookingData => {
+        res.json(bookingData);
+    });
+});
+
 app.listen(PORT, () => {
   console.log("Backend server running at http://localhost:" + PORT);
 });
