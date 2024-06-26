@@ -2,6 +2,7 @@ import Icon from "@mdi/react";
 import { mdiGrass, mdiMenu } from '@mdi/js';
 import { useNavigate } from "react-router-dom";
 import { Button, Offcanvas } from "react-bootstrap";
+import { NavLink } from "../types";
 
 interface NavbarProps {
     menuShowHandler: () => void;
@@ -9,17 +10,10 @@ interface NavbarProps {
     showMenu: boolean;
 }
 
-interface Link {
-    route: string,
-    text: string,
-    buttonVariant?: string,
-    buttonClasses?: string,
-}
-
 export default function Navbar(props: NavbarProps) {
     const navigate = useNavigate();
 
-    const links : Link[] = [
+    const links : NavLink[] = [
         {
             "route": "/lawn-services",
             "text": "Lawn Services",

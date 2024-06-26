@@ -1,16 +1,14 @@
 import { RouterProvider } from "react-router-dom";
-import { AuthContext } from "./context/AuthContext";
-import { useAuth } from "./hooks/useAuth";
 import { router } from "./router";
+import { AuthProvider } from "./context/AuthContext.tsx";
 
 
 function App() {
-  const {user, setUser } = useAuth();
 
   return (
-    <AuthContext.Provider value={{user, setUser}}>
-      <RouterProvider router={router}/>
-    </AuthContext.Provider>
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
   )
 }
 

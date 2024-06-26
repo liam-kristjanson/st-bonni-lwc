@@ -8,6 +8,7 @@ import Serves from "./routes/Serves";
 import Contact from "./routes/Contact";
 import AdminBook from "./routes/AdminBook";
 import Login from "./routes/Login";
+import AdminDashboard from "./routes/AdminDashboard";
 import AdminForm from "./routes/AdminForm";
 
 export const router = createBrowserRouter([
@@ -42,6 +43,10 @@ export const router = createBrowserRouter([
     {
         path:"/login",
         element:<Login/>
+    },
+    {
+        path:"/admin/dashboard",
+        element:<AdminDashboard/>
     },
     {
         path: "/ad-form",

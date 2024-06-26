@@ -1,13 +1,21 @@
 import { Container } from "react-bootstrap";
 import LoginCluster from "../components/LoginCluster";
 import { useState } from "react";
+import Navbar from "../components/Navbar";
+import useNavbar from "../components/hooks/useNavbar";
+import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 export default function Login() {
+  const {showMenu, handleMenuShow, handleMenuHide} = useNavbar();
+  const { dispatch } = useAuthContext();
+  const navigate = useNavigate();
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
-
+    
   function handleEmailChange(newEmail: string) {
     setEmail(newEmail);
   }
@@ -43,7 +51,8 @@ export default function Login() {
       }
 
       console.log("Login successful:", result);
-      localStorage.setItem('token', result.token);
+      dispatch({type: "LOGIN", payload:{user: result}})
+      navigate('/admin/dashboard')
     } catch (error) {
       console.error("Login error:", error);
       setErrorMessage("Invalid email or password");
@@ -82,6 +91,14 @@ export default function Login() {
 
   return (
     <>
+      <Container>
+        <Navbar
+          showMenu={showMenu}
+          menuHideHandler={handleMenuHide}
+          menuShowHandler={handleMenuShow}
+        />
+      </Container>
+
       <Container>
         <LoginCluster
           emailChangeHandler={handleEmailChange}
