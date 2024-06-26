@@ -1,40 +1,73 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Navbar from "../components/Navbar"
+import useNavbar from '../components/hooks/useNavbar';
 
 import Calendar from 'react-calendar';
 import "../components/styles/ReactCalendar.css"
-import useNavbar from '../components/hooks/useNavbar';
 
-import { Modal } from 'react-bootstrap';
+import { useNavigate } from "react-router-dom";
+
+import { Button, Modal } from 'react-bootstrap';
 
 import Icon from '@mdi/react';
 import { mdiCalendarBlankOutline } from '@mdi/js';
+import { Booking } from '../types';
 
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 export default function BookingAvail() {
+    const {showMenu, handleMenuShow, handleMenuHide} = useNavbar();
+
+    const navigate = useNavigate();
+
     const [selectedDate, setSelectedDate] = useState<Value>(new Date());
     const [showModal, setShowModal] = useState<boolean>(false);
     
     const [modalText, setModalText] = useState<string>("----");
 
     const [availStatus, setAvailStatus] = useState<string>("unavailable");
+    const [availableDates, setAvailableDates] = useState<string[]>([]);
 
-    const {showMenu, handleMenuShow, handleMenuHide} = useNavbar();
+    useEffect(() => {
+        fetch(import.meta.env.VITE_SERVER + "/bookings")
 
-    const unavailableDates = ["Wed Jun 12 2024 00:00:00 GMT-0500 (Central Daylight Time)", "Sat Jun 29 2024 00:00:00 GMT-0500 (Central Daylight Time)"];
-    
+        .then(bookingResponse => {
+            console.log(bookingResponse.statusText);
+            return bookingResponse.json();
+        })
+
+        .then(bookingData => {
+            let bookingDatesAvailable = bookingData.filter((bookingDate : Booking) => {
+                return bookingDate.isAvailable;
+            })
+
+            bookingDatesAvailable.map((booking : Booking) => {
+                let validDate = (booking.date).substring(0, 10);
+
+                if (!availableDates.includes(validDate)) {
+                    availableDates.push(validDate);
+                }
+            })
+        })
+    }, []);
+
     function handleCalendarChange(value: Value) {
         if (!Array.isArray(value)) {
-            let displayDate = new Intl.DateTimeFormat('en-US', {dateStyle: 'full'}).format(new Date(value ?? "----"));
-            
+            let dateData = new Date(value ?? "----");
+            let year = new Intl.DateTimeFormat('en', { year: "numeric" }).format(dateData);
+            let month = new Intl.DateTimeFormat('en', { month: "2-digit" }).format(dateData);
+            let day = new Intl.DateTimeFormat('en', { day: "2-digit" }).format(dateData);
+            let dateValue = (`${year}-${month}-${day}`);
+
+            let displayDate = new Intl.DateTimeFormat('en-US', {dateStyle: "full"}).format(dateData);
+
             setSelectedDate(value);
             setShowModal(true);
             setModalText(displayDate);
 
-            if (unavailableDates.includes(value?.toString() ?? "----")) {
+            if (!availableDates.includes(dateValue)) {
                 setAvailStatus("unavailable");
             } else {
                 setAvailStatus("available");
@@ -60,6 +93,27 @@ export default function BookingAvail() {
                         <span style={{"color": "#2FA606"}}>• Available</span>
                     )}
                 </Modal.Body>
+
+                <Modal.Footer>
+                    {availStatus === "unavailable" ? (
+                        <Button
+                            className={"btn btn-danger text-white"}
+                            style={{"marginLeft": "100px"}}
+                            onClick={() => navigate("/time-availability")}
+                            disabled
+                        >
+                            Check Availability
+                        </Button>
+                    ) : ( 
+                        <Button
+                            className={"btn btn-primary text-white"}
+                            style={{"marginLeft": "100px"}}
+                            onClick={() => navigate("/time-availability", {state: {date: selectedDate}})}
+                        >
+                            Check Availability
+                        </Button>
+                    )}
+                </Modal.Footer>
             </Modal>
 
             <div className="container">
@@ -70,7 +124,7 @@ export default function BookingAvail() {
                     />
             </div>
             
-            <div className="container-fluid" style={{"paddingBottom": "750px", "backgroundImage": "url(/grassPatternGrey.png)", "backgroundSize": "100% auto", "backgroundRepeat": "repeat"}}>
+            <div className="container-fluid" style={{"paddingBottom": "100px", "marginBottom": "200px", "backgroundImage": "url(/grassPatternGrey.png)", "backgroundSize": "100% auto", "backgroundRepeat": "repeat"}}>
                 <div style={{"paddingBottom": "40px"}}></div>
                 
                 <div className="row text-center">
@@ -90,9 +144,15 @@ export default function BookingAvail() {
                             next2Label={null}
                             prev2Label={null}
 
-                            tileClassName = {({date, view}) => {
-                                if (unavailableDates.includes(date?.toString() ?? "----")) {
-                                    return  'unavailable'
+                            tileClassName = {({date}) => {
+                                let dateData = new Date(date ?? "----");
+                                let year = new Intl.DateTimeFormat('en', { year: "numeric" }).format(dateData);
+                                let month = new Intl.DateTimeFormat('en', { month: "2-digit" }).format(dateData);
+                                let day = new Intl.DateTimeFormat('en', { day: "2-digit" }).format(dateData);
+                                let dateValue = (`${year}-${month}-${day}`);
+
+                                if (availableDates.includes(dateValue)) {
+                                    return  'available'
                                 }
                             }}
 

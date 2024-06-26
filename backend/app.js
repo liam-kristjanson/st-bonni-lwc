@@ -34,6 +34,12 @@ app.get('/user', (req, res) => {
 })
 app.post("/reset-password", authController.resetPassword);
 
+app.get("/bookings", (req, res) => {
+    dbRetriever.fetchDocuments("bookings", {})
+    .then(bookingData => {
+        res.json(bookingData);
+    });
+});
 app.post("/availability", bookingController.handleUpdateAvailability);
 
 app.get('/log-auth-token', (req, res) => {

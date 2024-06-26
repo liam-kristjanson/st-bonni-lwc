@@ -12,3 +12,10 @@ export interface NavLink {
     buttonVariant?: string,
     buttonClasses?: string,
 }
+
+export interface Booking {
+    date: string,
+    startTime: string,
+    endTime: string,
+    isAvailable: boolean,
+}

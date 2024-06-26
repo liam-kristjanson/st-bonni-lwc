@@ -3,6 +3,7 @@ import { createBrowserRouter } from "react-router-dom";
 import Home from "./routes/Home";
 import AboutUs from "./routes/AboutUs";
 import BookingAvail from "./routes/BookingAvail";
+import TimeAvail from "./routes/TimeAvail";
 import Serves from "./routes/Serves";
 import Contact from "./routes/Contact";
 import AdminBook from "./routes/AdminBook";
@@ -22,6 +23,10 @@ export const router = createBrowserRouter([
     {
         path: "/booking-availability",
         element: <BookingAvail/>
+    },
+    {
+        path: "/time-availability",
+        element: <TimeAvail/>
     },
     {
         path: "/lawn-services",

@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import Navbar from "../components/Navbar"
-import 'react-calendar/dist/Calendar.css';
 import Calendar from 'react-calendar';
 import "../components/styles/ReactCalendar.css"
 import useNavbar from '../components/hooks/useNavbar';
