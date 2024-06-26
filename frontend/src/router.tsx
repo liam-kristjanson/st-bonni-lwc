@@ -6,7 +6,9 @@ import BookingAvail from "./routes/BookingAvail";
 import TimeAvail from "./routes/TimeAvail";
 import Serves from "./routes/Serves";
 import Contact from "./routes/Contact";
+import AdminBook from "./routes/AdminBook";
 import Login from "./routes/Login";
+import AdminForm from "./routes/AdminForm";
 
 export const router = createBrowserRouter([
     {
@@ -32,8 +34,18 @@ export const router = createBrowserRouter([
     {
         path:"/contact",
         element:<Contact/>
-    }, {
+    },
+    {
+        path: "/ad-book",
+        element:<AdminBook/>
+    }, 
+    {
         path:"/login",
         element:<Login/>
+    },
+    {
+        path: "/ad-form",
+        element:<AdminForm />
     }
+
 ])
