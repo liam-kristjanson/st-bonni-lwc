@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Form } from "react-bootstrap";
+import { Form, Spinner } from "react-bootstrap";
 export default function AdminForm() {
 
 const [startTime, setStartTime] = useState<string>("09:00");
@@ -39,9 +39,9 @@ async function handleSubmit(e: React.FormEvent<HTMLFormElement>){
     headers: reqHeaders
   });
 
-  const goal = await response.json();
+  const responseJson = await response.json();
   setIsLoading(false);
-  alert(goal);
+  alert(responseJson.message ?? responseJson.error ?? "An error occured");
 
   const prepareBody = {
     startTime: startTime, 
@@ -70,7 +70,12 @@ return(
         <Form.Label>End Time</Form.Label>
         <Form.Control placeholder="End Period /hr" type="time" value={endTime} onChange={handleEndTimeChange}/>
       </Form.Group>
-      <button type="submit" className="btn btn-secondary">Submit</button>
+
+      {isLoading ? (
+        <Spinner/>
+      ) : (
+        <button type="submit" className="btn btn-secondary">Submit</button>
+      )}
     </Form>
    
 

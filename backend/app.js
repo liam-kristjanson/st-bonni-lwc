@@ -9,6 +9,7 @@ const jwt = require("jsonwebtoken");
 
 //local modules
 const authController = require('./authController.js')
+const bookingController = require('./bookingController.js')
 
 const PORT = process.env.PORT || 8080;
 
@@ -28,7 +29,7 @@ app.post("/login", authController.handleLogin);
 
 app.post("/reset-password", authController.resetPassword);
 
-app.post("/availability", authController.handleUpdateAvailability);
+app.post("/availability", bookingController.handleUpdateAvailability);
 
 app.listen(PORT, () => {
   console.log("Backend server running at http://localhost:" + PORT);
