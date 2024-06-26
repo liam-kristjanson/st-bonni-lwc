@@ -42,7 +42,7 @@ async function handleSubmit(e: React.FormEvent<HTMLFormElement>){
     "content-type" : "application/json"
   }
 
-  let response = await fetch(import.meta.env.VITE_SERVER + '/availability', {
+  const response = await fetch(import.meta.env.VITE_SERVER + '/availability', {
     method: "POST",
     body: JSON.stringify({
       startTime: startTime,
@@ -65,10 +65,6 @@ async function handleSubmit(e: React.FormEvent<HTMLFormElement>){
 
   fetchAndUpdateSchedule();
 }
-
-  useEffect(() => {
-    fetchAndUpdateSchedule();
-  }, []);
 
   function fetchAndUpdateSchedule() {
     const requestHeaders: HeadersInit = {
@@ -95,7 +91,10 @@ async function handleSubmit(e: React.FormEvent<HTMLFormElement>){
       console.error("Error fetching data", error);
     })
   }
-  
+
+  useEffect(() => {
+    fetchAndUpdateSchedule();
+  });
 
 return( 
   <>

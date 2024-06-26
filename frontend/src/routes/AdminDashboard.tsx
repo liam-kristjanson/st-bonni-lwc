@@ -7,7 +7,6 @@ import useNavbar from "../components/hooks/useNavbar";
 export default function AdminDashboard() {
     const user = useAuthContext().state.user;
     const [serverMessage, setServerMessage] = useState<string>('');
-    const [isLoading, setIsLoading] = useState<boolean>(false);
     const {showMenu, handleMenuHide, handleMenuShow} = useNavbar();
 
     const logAuthToken = async () => {
@@ -22,7 +21,7 @@ export default function AdminDashboard() {
         });
 
         if (response.ok) {
-            let responseText = await response.text();
+            const responseText = await response.text();
             setServerMessage(responseText);
         }
     }

@@ -30,7 +30,7 @@ export default function BookingAvail() {
     const [modalText, setModalText] = useState<string>("----");
 
     const [availStatus, setAvailStatus] = useState<string>("unavailable");
-    const [availableDates, setAvailableDates] = useState<Date[]>([]);
+    const [availableDates, setAvailableDates] = useState<string[]>([]);
 
     useEffect(() => {
         fetch(import.meta.env.VITE_SERVER + "/bookings")
@@ -41,26 +41,26 @@ export default function BookingAvail() {
         })
 
         .then(bookingData => {
-            let bookingDatesAvailable = bookingData.filter((bookingDate : Booking) => {
+            const bookingDatesAvailable = bookingData.filter((bookingDate : Booking) => {
                 return bookingDate.isAvailable;
             })
 
             bookingDatesAvailable.map((booking : Booking) => {
-                let validDate = (booking.date).substring(0, 10);
+                const validDate = (booking.date).substring(0, 10);
 
                 if (!availableDates.includes(validDate)) {
                     setAvailableDates(availableDates => [...availableDates, validDate])
                 }
             })
         })
-    }, []);
+    });
 
     function handleCalendarChange(value: Value) {
         if (!Array.isArray(value)) {
-            let dateData = new Date(value ?? "----");
+            const dateData = new Date(value ?? "----");
             
-            let dateValue = (`${new Intl.DateTimeFormat('en', { year: "numeric" }).format(dateData)}-${new Intl.DateTimeFormat('en', { month: "2-digit" }).format(dateData)}-${new Intl.DateTimeFormat('en', { day: "2-digit" }).format(dateData)}`);
-            let displayDate = new Intl.DateTimeFormat('en-US', {dateStyle: "full"}).format(dateData);
+            const dateValue = (`${new Intl.DateTimeFormat('en', { year: "numeric" }).format(dateData)}-${new Intl.DateTimeFormat('en', { month: "2-digit" }).format(dateData)}-${new Intl.DateTimeFormat('en', { day: "2-digit" }).format(dateData)}`);
+            const displayDate = new Intl.DateTimeFormat('en-US', {dateStyle: "full"}).format(dateData);
 
             setSelectedDate(value);
             setShowModal(true);
@@ -70,7 +70,7 @@ export default function BookingAvail() {
                 setAvailStatus("unavailable");
             } else {
                 setAvailStatus("available");
-            };
+            }
         }
     }
 
@@ -140,11 +140,11 @@ export default function BookingAvail() {
                             prev2Label={null}
 
                             tileClassName = {({date}) => {
-                                let dateData = new Date(date ?? "----");
-                                let year = new Intl.DateTimeFormat('en', { year: "numeric" }).format(dateData);
-                                let month = new Intl.DateTimeFormat('en', { month: "2-digit" }).format(dateData);
-                                let day = new Intl.DateTimeFormat('en', { day: "2-digit" }).format(dateData);
-                                let dateValue = (`${year}-${month}-${day}`);
+                                const dateData = new Date(date ?? "----");
+                                const year = new Intl.DateTimeFormat('en', { year: "numeric" }).format(dateData);
+                                const month = new Intl.DateTimeFormat('en', { month: "2-digit" }).format(dateData);
+                                const day = new Intl.DateTimeFormat('en', { day: "2-digit" }).format(dateData);
+                                const dateValue = (`${year}-${month}-${day}`);
 
                                 if (availableDates.includes(dateValue)) {
                                     return  'available'

@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react';
-
 import Navbar from "../components/Navbar"
 import useNavbar from '../components/hooks/useNavbar';
 
@@ -11,7 +9,7 @@ export default function TimeAvail() {
     const { state } = useLocation();
     const { date } = state;
 
-    let displayDate = new Intl.DateTimeFormat('en-US', {dateStyle: "full"}).format(date);
+    const displayDate = new Intl.DateTimeFormat('en-US', {dateStyle: "full"}).format(date);
 
     /*
     useEffect(() => {
