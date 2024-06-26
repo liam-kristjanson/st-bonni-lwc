@@ -10,6 +10,7 @@ import AdminBook from "./routes/AdminBook";
 import Login from "./routes/Login";
 import AdminDashboard from "./routes/AdminDashboard";
 import Schedule from "./routes/Schedule";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 export const router = createBrowserRouter([
     {
@@ -46,11 +47,17 @@ export const router = createBrowserRouter([
     },
     {
         path:"/admin/dashboard",
-        element:<AdminDashboard/>
+        element: 
+        <ProtectedRoute validRoles={['admin']}>
+            <AdminDashboard/>
+        </ProtectedRoute>
     },
     {
         path: "/admin/schedule",
-        element:<Schedule />
+        element:
+        <ProtectedRoute validRoles={['admin']}>
+            <Schedule/>
+        </ProtectedRoute>
     }
 
 ])
