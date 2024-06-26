@@ -28,6 +28,8 @@ app.post("/login", authController.handleLogin);
 
 app.post("/reset-password", authController.resetPassword);
 
+app.post("/availability", authController.handleUpdateAvailability);
+
 app.listen(PORT, () => {
   console.log("Backend server running at http://localhost:" + PORT);
 });

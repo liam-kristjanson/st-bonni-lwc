@@ -92,3 +92,58 @@ module.exports.resetPassword = async (req, res) => {
         res.status(500).json({ error: "Error resetting password" });
       }
 }
+module.exports.handleUpdateAvailability = async(req, res) => {
+  try{
+    const {startTime, endTime, date } = req.body; 
+
+    console.log("REQ BODY");
+    console.log(req.body);
+
+    //validation
+    if (!startTime || !endTime || !date) {
+      return res.status(400).json({error: "Start time, date and end time are required"});
+    }
+
+    const queryDate = new Date(date);
+
+    const startTimeDate = new Date(queryDate).setHours(startTime.substring(1,2))
+    const startTimeDate2 = new Date(startTimeDate).toISOString();
+
+    const endTimeDate = new Date(queryDate).setHours(endTime.substring(1,2))
+    const endTimeDate2 = new Date(endTimeDate).toISOString();
+    
+    console.log("Start time date");
+    console.log(new Date(startTimeDate));
+
+    console.log("End time date");
+    console.log(new Date(endTimeDate));
+
+    const currentAvailability = await dbRetriever.fetchOneDocument('bookings', {date: queryDate});
+
+    if(currentAvailability){
+      console.log("Current availability:")
+      console.log(currentAvailability);
+
+      const result = await dbRetriever.updateOne('bookings', {date: queryDate}, {$set: {'startTime': new Date(startTimeDate2), 'endTime': new Date(endTimeDate2)}})
+
+      console.log("Upserted record with id " + result.upsertedId)
+
+      res.status(200).send('Found old record');
+    }else{
+      res.send("No current availabilty");
+      console.log("Create new availability!");
+    }
+
+     
+    // res.status(200).json({
+    //   message: "Booking successful",
+    //   token: token,
+    // });
+
+  }catch (err) {
+    console.error("booking failed:", err);
+    res.status(400).json({ error: "An error occurred while trying to book" });
+
+  }    
+
+}
