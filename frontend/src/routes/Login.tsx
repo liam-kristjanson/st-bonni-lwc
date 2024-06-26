@@ -51,47 +51,14 @@ export default function Login() {
       }
 
       console.log("Login successful:", result);
-      localStorage.setItem('token', result.token);
+      dispatch({type: "LOGIN", payload:{user: result}})
+      navigate('/admin/dashboard')
     } catch (error) {
       console.error("Login error:", error);
       setErrorMessage("Invalid email or password");
     } finally {
       setIsLoading(false);
     }
-    
-      function handlePasswordChange(newPassword: string) {
-        setPassword(newPassword);
-      }
-    
-      async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-        e.preventDefault();
-
-        console.log("Processing login...");
-        setIsLoading(true);
-
-        const loginHeaders = {
-          "content-type": "application/json"
-        }
-
-        const loginBody = {
-          "email": email,
-          "password": password,
-        }
-
-        const response = await fetch(import.meta.env.VITE_SERVER + "/login", {
-          method: "POST",
-          headers: loginHeaders,
-          body: JSON.stringify(loginBody),
-        });
-
-        if (response.ok) {
-          const user = await response.json();
-          dispatch({type: "LOGIN", payload: { user }});
-          navigate('/admin/dashboard');
-        } else {
-          alert('Invalid username or password');
-        }
-      }
   }
 
   async function handleForgotPassword(email: string, newPassword: string) {

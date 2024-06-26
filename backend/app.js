@@ -34,13 +34,36 @@ app.get('/user', (req, res) => {
 })
 app.post("/reset-password", authController.resetPassword);
 
-<<<<<<< HEAD
-app.get("/bookings", (req, res) => {
-    
-});
-=======
 app.post("/availability", bookingController.handleUpdateAvailability);
->>>>>>> main
+
+app.get('/log-auth-token', (req, res) => {
+    let verifiedAuthToken = jwt.verify(req.headers.authorization, process.env.JWT_SECRET);
+
+    console.log('Unverified auth token:')
+    console.log(req.headers.authorization);
+
+    console.log('Verified auth token');
+    console.log(verifiedAuthToken);
+
+    res.send('Auth token has been logged in the backend');
+}) 
+
+function setTimeOnDate(date, time) {
+    timeHours = parseInt(time.substring(0, 2));
+    timeMinutes = parseInt(time.substring(3,5));
+
+    console.log("TIME HOURS:", timeHours);
+    console.log("TIME MINUTES", timeMinutes)
+
+    let returnDate = new Date(date);
+
+    returnDate.setHours(timeHours);
+    returnDate.setMinutes(timeMinutes);
+    returnDate.setSeconds(0);
+    returnDate.setMilliseconds(0);
+
+    return returnDate;
+}
 
 app.listen(PORT, () => {
   console.log("Backend server running at http://localhost:" + PORT);

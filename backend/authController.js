@@ -1,7 +1,6 @@
 const dbRetriever = require('./dbretriever');
 const encrypt = require("./encrypt");
 const jwt = require("jsonwebtoken");
-const dateHelpers = require('./dateHelpers');
 
 module.exports.handleLogin = async (req, res) => {
     try {
@@ -42,15 +41,20 @@ module.exports.handleLogin = async (req, res) => {
         }
     
         // Create JWT token----not useful now*******************************
-        const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, {
+        let authData = {
+            name: user.name,
+            email: user.email,
+            role: user.role,
+        }
+
+        const token = jwt.sign({authData}, process.env.JWT_SECRET, {
           expiresIn: "24h",
         });
+
+        authData.token = token;
     
         // Send successful response with token
-        res.status(200).json({
-          message: "Login successful",
-          token: token,
-        });
+        res.status(200).json(authData);
       } catch (err) {
         console.error("Login error:", err);
         res.status(500).json({ error: "An error occurred during login" });
