@@ -3,7 +3,6 @@ import Navbar from "../components/Navbar"
 import Calendar from 'react-calendar';
 import "../components/styles/ReactCalendar.css"
 import useNavbar from '../components/hooks/useNavbar';
-import Table from 'react-bootstrap/Table';
 
 type ValuePiece = Date | null;
 

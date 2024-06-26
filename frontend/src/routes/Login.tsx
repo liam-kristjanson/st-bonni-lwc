@@ -35,7 +35,7 @@ export default function Login() {
     };
 
     try {
-      let response = await fetch(`${import.meta.env.VITE_SERVER}/login`, {
+      const response = await fetch(`${import.meta.env.VITE_SERVER}/login`, {
         method: "POST",
         body: JSON.stringify({
           email: email,
@@ -67,7 +67,7 @@ export default function Login() {
     };
 
     try {
-      let response = await fetch(
+      const response = await fetch(
         `${import.meta.env.VITE_SERVER}/reset-password`,
         {
           method: "POST",
