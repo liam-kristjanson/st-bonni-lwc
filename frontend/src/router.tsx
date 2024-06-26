@@ -9,7 +9,7 @@ import Contact from "./routes/Contact";
 import AdminBook from "./routes/AdminBook";
 import Login from "./routes/Login";
 import AdminDashboard from "./routes/AdminDashboard";
-import AdminForm from "./routes/AdminForm";
+import Schedule from "./routes/Schedule";
 
 export const router = createBrowserRouter([
     {
@@ -49,8 +49,8 @@ export const router = createBrowserRouter([
         element:<AdminDashboard/>
     },
     {
-        path: "/ad-form",
-        element:<AdminForm />
+        path: "/admin/schedule",
+        element:<Schedule />
     }
 
 ])
