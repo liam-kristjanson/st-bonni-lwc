@@ -168,12 +168,12 @@
     color: #ffffff;
 }
 
-.unavailable:enabled {
-    color: #e31717;
+.available:enabled {
+    color: #2FA606;
 }
 
-.unavailable:enabled:hover {
-    background: #e31717;
+.available:enabled:hover {
+    background: #2FA606;
     color: #ffffff;
 }
 
