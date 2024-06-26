@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Navbar from "../components/Navbar"
 import useNavbar from '../components/hooks/useNavbar';
+
 import { useLocation } from 'react-router-dom';
 
 export default function TimeAvail() {
@@ -9,8 +10,14 @@ export default function TimeAvail() {
 
     const { state } = useLocation();
     const { date } = state;
-    
-    let formatDate = new Intl.DateTimeFormat('en-US', {dateStyle: 'full'}).format(new Date(date ?? "----"));
+
+    let displayDate = new Intl.DateTimeFormat('en-US', {dateStyle: "full"}).format(date);
+
+    /*
+    useEffect(() => {
+        fetch(import.meta.env.VITE_Server + "/time-availability?date=" + date)
+    });
+    */
 
     return (
         <>
@@ -22,16 +29,20 @@ export default function TimeAvail() {
                     />
             </div>
 
-            <div className="container-fluid" style={{"paddingBottom": "100px", "marginBottom": "200px", "backgroundImage": "url(/grassPatternGrey.png)", "backgroundSize": "100% auto", "backgroundRepeat": "repeat"}}>
+            <div className="container-fluid" style={{"paddingBottom": "100px"}}>
                 <div style={{"paddingBottom": "40px"}}></div>
 
                 <div className="row text-center">
                     <div className="col">
-                        <h1 className="fw-bold">Availability: <span className="text-primary">{formatDate}</span></h1>
+                        <h1>Availability: <span className="text-primary">{displayDate}</span></h1>
                     </div>
                 </div>
 
-
+                <div className="row">
+                    <div className="col">
+                        
+                    </div>
+                </div>
             </div>
         </>
     )
