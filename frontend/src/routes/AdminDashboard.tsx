@@ -13,7 +13,7 @@ export default function AdminDashboard() {
         console.log('Logging auth token');
 
         const HEADERS : HeadersInit = {
-            authorization: user?.authToken ?? ""
+            authorization: user?.token ?? ""
         }
 
         const response = await fetch(import.meta.env.VITE_SERVER + '/log-auth-token', {
@@ -63,7 +63,7 @@ export default function AdminDashboard() {
 
                         <p>User email: {user?.email ?? "Not found"}</p>
 
-                        <p>User auth token: {user?.authToken ?? "Not found"}</p>
+                        <p>User auth token: {user?.token ?? "Not found"}</p>
 
                         <p>Local storage user: {localStorage.getItem('user')}</p>
 
