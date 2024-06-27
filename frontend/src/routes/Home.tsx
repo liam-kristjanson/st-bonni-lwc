@@ -13,6 +13,7 @@ import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 import WeedAnimation from "../components/WeedAnimation.tsx";
 import ScrollButton from "../components/ScrollButton.tsx";
 import Footer from "../components/Footer.tsx";
+import CustomerRev from "../components/CustomerRev.tsx";
 
 
 function App() {
@@ -70,6 +71,22 @@ function App() {
         </Container>
         <ScrollButton />
       </div>
+
+      <Container>
+        <Row className=' d-flex justify-content-center align-items-center'>
+          <Col className=" col-12 col-lg-6 col-xl-4  mb-4">
+            <CustomerRev/>
+          </Col>
+          <Col className='col-12 col-lg-6 col-xl-4 mb-4'>
+            <CustomerRev/>
+          </Col>
+          <Col className='col-12 col-lg-6 col-xl-4 mb-4'>
+            <CustomerRev/>
+          </Col>
+          
+        </Row>
+      </Container>
+
 
       {/* Animation section Got weed */}
       <WeedAnimation />
