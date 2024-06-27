@@ -11,11 +11,15 @@ import { mdiInformationVariant } from '@mdi/js';
 import { mdiBookPlusMultiple } from '@mdi/js';
 import { mdiMessageDraw } from '@mdi/js';
 import { Col, Container, Row } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 
 const myStyle={
   listStyleType:'none'}
 export default function Footer() {
+
+const navigate = useNavigate();
+
 return(
 <>
     <footer className=" justify-content-evenly align-items-center bg-primary text-bg-light ps-3   ">
@@ -49,7 +53,7 @@ return(
                                 <li className="text-md-center">
                                 <Icon path={mdiInformationVariant} size={1.5} className=" d-none d-md-inline" />
                                 <Icon path={mdiInformationVariant} size={1} className=" d-md-none " />
-                                About Us
+                                <a role="button" onClick={() => {navigate('/login')}}>Log in</a>
                                                     
                                 </li>
 
