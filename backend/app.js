@@ -32,6 +32,10 @@ app.use('/admin/', authController.verifyAdmin);
 //login route
 app.post("/login", authController.handleLogin);
 
+app.get('/', (req, res) => {
+    res.send('Service is running');
+})
+
 app.get('/user', (req, res) => {
     dbRetriever.fetchOneDocument('users', {username: 'admin'}).then(user => {
         res.send(user);
