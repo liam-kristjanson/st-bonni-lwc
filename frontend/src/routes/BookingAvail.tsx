@@ -10,7 +10,7 @@ import "../components/styles/ReactCalendar.css"
 
 import { useNavigate } from "react-router-dom";
 
-import { Button, Modal } from 'react-bootstrap';
+import { Button, Col, Container, Modal, Row } from 'react-bootstrap';
 
 import Icon from '@mdi/react';
 import { mdiCalendar, mdiCalendarBlankOutline } from '@mdi/js';
@@ -115,13 +115,13 @@ export default function BookingAvail() {
                 </Modal.Footer>
             </Modal>
 
-            <div className="container">
+            <Container>
                 <Navbar
                         showMenu={showMenu}
                         menuHideHandler={handleMenuHide}
                         menuShowHandler={handleMenuShow}
                     />
-            </div>
+            </Container>
 
             <HeroGraphic
                         imageSource="/house-lawn-cropped-3.jpg"
@@ -129,9 +129,9 @@ export default function BookingAvail() {
                         iconPath={mdiCalendar}
                     />
             
-            <div className="container-fluid" style={{"paddingBottom": "100px"}}>
-                <div className="row">
-                    <div className="col d-flex justify-content-center">
+            <Container className="fluid" style={{"paddingBottom": "100px"}}>
+                <Row>
+                    <Col className="d-flex justify-content-center">
 
                         <Calendar onChange={handleCalendarChange}
                             value={selectedDate}
@@ -154,9 +154,9 @@ export default function BookingAvail() {
                             minDate = {
                                 new Date()
                             }/>
-                    </div>
-                </div>
-            </div>
+                    </Col>
+                </Row>
+            </Container>
         </>
     )
 }
