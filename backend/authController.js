@@ -64,36 +64,71 @@ module.exports.handleLogin = async (req, res) => {
 module.exports.resetPassword = async (req, res) => {
     try {
         const { email, newPassword } = req.body;
-    
+
         // Check if email and new password are provided
         if (!email || !newPassword) {
-          return res
+            return res
             .status(400)
             .json({ error: "Email and new password are required" });
         }
-    
+
         // Find user by email
         const user = await dbRetriever.fetchOneDocument("users", { email });
-    
+
         // If user not found, return error
         if (!user) {
-          return res.status(404).json({ error: "User not found" });
+            return res.status(404).json({ error: "User not found" });
         }
-    
+
         // Hash the new password
         const hashedNewPassword = await encrypt.encryption(newPassword);
-    
+
         // Update user's password in the database
         await dbRetriever.updateOne(
-          "users",
-          { email },
-          { $set: { hashedValue: hashedNewPassword } }
+            "users",
+            { email },
+            { $set: { hashedValue: hashedNewPassword } }
         );
-    
+
         // Send success response
         res.json({ message: "Password reset successfully" });
-      } catch (err) {
+    } catch (err) {
         console.error("Reset password error:", err);
         res.status(500).json({ error: "Error resetting password" });
-      }
+    }
+}
+
+module.exports.jwtParser = (req, res, next) => {
+    const claimToken = req.headers.authorization
+    let verifiedAuthData;
+
+    console.log('claim token')
+    console.log(claimToken);
+
+    try {
+      if (claimToken && claimToken != "none") {
+        verifiedAuthData = jwt.verify(claimToken, process.env.JWT_SECRET).authData;
+      } else {
+        verifiedAuthData = null;
+      } 
+    } catch (e) {
+      console.error("Error verifying auth data: " + e);
+      verifiedAuthData = null;
+    } 
+
+    console.log("Verified auth data");
+    console.log(verifiedAuthData);
+
+    req.authData = verifiedAuthData;
+
+    next();
+}
+
+module.exports.verifyAdmin = (req, res, next) => {
+  if (req.authData?.role ?? undefined === "admin") {
+    console.log("User " + req.authData.email + " authenticated as admin")
+    return next();
+  }
+
+  return res.status(401).json({error: "Unauthorized"})
 }

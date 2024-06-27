@@ -20,9 +20,14 @@ const corsOptions = {
 
 const app = express();
 
+//all-route middleware
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(authController.jwtParser)
+
+//route-groupe middleware
+app.use('/admin/', authController.verifyAdmin);
 
 //login route
 app.post("/login", authController.handleLogin);
@@ -40,7 +45,7 @@ app.get("/bookings", (req, res) => {
         res.json(bookingData);
     });
 });
-app.post("/availability", bookingController.handleUpdateAvailability);
+
 
 app.get('/log-auth-token', (req, res) => {
     let verifiedAuthToken = jwt.verify(req.headers.authorization, process.env.JWT_SECRET);
@@ -54,22 +59,7 @@ app.get('/log-auth-token', (req, res) => {
     res.send('Auth token has been logged in the backend');
 }) 
 
-function setTimeOnDate(date, time) {
-    timeHours = parseInt(time.substring(0, 2));
-    timeMinutes = parseInt(time.substring(3,5));
-
-    console.log("TIME HOURS:", timeHours);
-    console.log("TIME MINUTES", timeMinutes)
-
-    let returnDate = new Date(date);
-
-    returnDate.setHours(timeHours);
-    returnDate.setMinutes(timeMinutes);
-    returnDate.setSeconds(0);
-    returnDate.setMilliseconds(0);
-
-    return returnDate;
-}
+app.post("/admin/availability", bookingController.handleUpdateAvailability);
 
 app.listen(PORT, () => {
   console.log("Backend server running at http://localhost:" + PORT);
