@@ -35,11 +35,21 @@ app.get('/user', (req, res) => {
 app.post("/reset-password", authController.resetPassword);
 
 app.get("/bookings", (req, res) => {
-    dbRetriever.fetchDocuments("bookings", {})
-    .then(bookingData => {
+    let retrieveDoc = [];
+
+    if (req.query.date) {
+        console.log("Fetching records for date " + new Date(req.query.date + " 00:00"))
+        retrieveDoc = dbRetriever.fetchDocuments("bookings", {date: new Date(req.query.date + " 00:00")})
+    } else {
+        console.log("Fetching records for any date");
+        retrieveDoc = dbRetriever.fetchDocuments("bookings", {})
+    }
+
+    retrieveDoc.then(bookingData => {
         res.json(bookingData);
     });
 });
+
 app.post("/availability", bookingController.handleUpdateAvailability);
 
 app.get('/log-auth-token', (req, res) => {

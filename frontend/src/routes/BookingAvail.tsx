@@ -36,7 +36,6 @@ export default function BookingAvail() {
         fetch(import.meta.env.VITE_SERVER + "/bookings")
 
         .then(bookingResponse => {
-            console.log(bookingResponse.statusText);
             return bookingResponse.json();
         })
 
@@ -57,10 +56,13 @@ export default function BookingAvail() {
 
     function handleCalendarChange(value: Value) {
         if (!Array.isArray(value)) {
-            const dateData = new Date(value ?? "----");
+            const date = new Date(value ?? "----");
             
-            const dateValue = (`${new Intl.DateTimeFormat('en', { year: "numeric" }).format(dateData)}-${new Intl.DateTimeFormat('en', { month: "2-digit" }).format(dateData)}-${new Intl.DateTimeFormat('en', { day: "2-digit" }).format(dateData)}`);
-            const displayDate = new Intl.DateTimeFormat('en-US', {dateStyle: "full"}).format(dateData);
+            const dateValue = (`${new Intl.DateTimeFormat('en', { year: "numeric" }).format(date)}
+                -${new Intl.DateTimeFormat('en', { month: "2-digit" }).format(date)}
+                -${new Intl.DateTimeFormat('en', { day: "2-digit" }).format(date)}`);
+                
+            const displayDate = new Intl.DateTimeFormat('en-US', {dateStyle: "full"}).format(date);
 
             setSelectedDate(value);
             setShowModal(true);
@@ -140,11 +142,7 @@ export default function BookingAvail() {
                             prev2Label={null}
 
                             tileClassName = {({date}) => {
-                                const dateData = new Date(date ?? "----");
-                                const year = new Intl.DateTimeFormat('en', { year: "numeric" }).format(dateData);
-                                const month = new Intl.DateTimeFormat('en', { month: "2-digit" }).format(dateData);
-                                const day = new Intl.DateTimeFormat('en', { day: "2-digit" }).format(dateData);
-                                const dateValue = (`${year}-${month}-${day}`);
+                                const dateValue = (`${new Intl.DateTimeFormat('en', { year: "numeric" }).format(date)}-${new Intl.DateTimeFormat('en', { month: "2-digit" }).format(date)}-${new Intl.DateTimeFormat('en', { day: "2-digit" }).format(date)}`);
 
                                 if (availableDates.includes(dateValue)) {
                                     return  'available'

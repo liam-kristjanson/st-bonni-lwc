@@ -5,6 +5,7 @@ import useNavbar from '../components/hooks/useNavbar';
 
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { Appointment, Booking } from "../types";
 
 export default function TimeAvail() {
     const {showMenu, handleMenuShow, handleMenuHide} = useNavbar();
@@ -12,51 +13,42 @@ export default function TimeAvail() {
     const { state } = useLocation();
     const { date } = state;
 
-    const [startTime, setStartTime] = useState<string>("09:00");
-    const [endTime, setEndTime] = useState<string>("11:00");
-    const [timeDiffer, setTimeDiffer] = useState<string>("10hr");
-
+    const dateValue = (`${new Intl.DateTimeFormat('en', { year: "numeric" }).format(date)}-${new Intl.DateTimeFormat('en', { month: "2-digit" }).format(date)}-${new Intl.DateTimeFormat('en', { day: "2-digit" }).format(date)}`);
+    let isoDate = ((new Date(dateValue)).toISOString()).replace('Z', '+00:00');
     const displayDate = new Intl.DateTimeFormat('en-US', {dateStyle: "full"}).format(date);
 
-    function handleDifferChange() {
-        let arbStartDate = new Date(`2000-01-01T${startTime}Z`);
-        let arbEndDate = new Date(`2000-01-01T${endTime}Z`);
-
-        console.log("Dates");
-        console.log(arbStartDate);
-        console.log(arbEndDate);
-
-        if (arbEndDate < arbStartDate) {
-            arbEndDate.setDate(arbEndDate.getDate() + 1);
-        }
-
-        let milliDiffer = arbEndDate.getTime() - arbStartDate.getTime();
-
-        console.log("Time Difference in Milliseconds")
-        console.log(milliDiffer);
-
-        let minDiffer = Math.floor(milliDiffer / 1000 / 60) % 60;
-        let hourDiffer = Math.floor(milliDiffer / 1000 / 60 / 60);
-      
-        if (hourDiffer === 1) {
-            setTimeDiffer(`${hourDiffer} hour, ${minDiffer} minutes`);
-        } else {
-            setTimeDiffer(`${hourDiffer} hours, ${minDiffer} minutes`);
-        }
-    }
-
-    function handleStartChange(element: React.ChangeEvent<HTMLInputElement>) {
-        setStartTime(element.target.value);
-        handleDifferChange();
-    }
-
-    function handleEndChange(element: React.ChangeEvent<HTMLInputElement>) {
-        setEndTime(element.target.value);
-        handleDifferChange();
-    }
+    const [bookedTimes, setBookedTimes] = useState<string[]>([])
 
     useEffect(() => {
-        handleDifferChange();
+        const letMeCheck = (new Date(dateValue)).toISOString()
+        console.log(letMeCheck)
+
+        fetch(import.meta.env.VITE_SERVER + "/bookings?date=" + dateValue)
+
+        .then(dateResponse => {
+            return dateResponse.json()
+        })
+        .then(dateData => {
+            console.log("Date Data");
+            console.log(dateData);
+
+            dateData.map((booking : Booking) => {
+
+                console.log("Booking Data");
+                console.log(booking);
+
+                //booking.bookings.map((appointment: Appointment) => {
+                    //let timeString = appointment.bookingTime.toLocaleTimeString();
+
+                    //console.log(timeString);
+                //})
+
+                //const bookedTime = (entry.startTime)
+
+                //.substring(11, 16);
+                //console.log(bookedTime)
+            })
+        })
     }, []);
 
     return (
@@ -78,60 +70,19 @@ export default function TimeAvail() {
                     </div>
                 </Row>
 
-                <Row className="mb-5">
-                    <Col>
+                <Row className="justify-content-center mb-5">
+                    <Col className="col-md-8">
                         <Card className="shadow">
                             <Card.Header className="fw-bold">
-                                Book Time Slot
+                                Booking Slots
                             </Card.Header>
 
                             <Card.Body>
-                                <Form>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>Start Time</Form.Label>
-                                        <Form.Control placeholder="Start Time" type="time" value={startTime} onChange={handleStartChange} required/>
-                                    </Form.Group>
-
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>End Time</Form.Label>
-                                        <Form.Control placeholder="End Time" type="time" value={endTime} onChange={handleEndChange} required/>
-                                    </Form.Group>
-                                </Form>
-
-                                <p className="mb-3">Duration: {timeDiffer}</p>
-
-                                <Button className="mb-3 w-100 btn-lg fw-bold text-white" type="submit" variant="primary">Continue</Button>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                </Row>
-
-
-                <Row className="mb-2">
-                    <Col>
-                        <Card className="shadow">
-                            <Card.Header className="fw-bold">
-                                Currently Booked Slots
-                            </Card.Header>
-
-                            <Card.Body>
-                                <Table striped bordered hover>
-                                    <thead>
-                                        <tr>
-                                            <th>Start Time</th>
-                                            <th>End Time</th>
-                                        </tr>
-                                    </thead>
-
+                                <Table striped hover style={{"tableLayout": "fixed"}}>
                                     <tbody>
                                         <tr>
-                                            <td>9:00:00 AM</td>
-                                            <td>11:00:00 AM</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>1:00:00 PM</td>
-                                            <td>3:00:00 PM</td>
+                                            <td className="text-center align-middle">9:00 AM - 10:00 AM</td>
+                                            <td className="d-flex justify-content-center"><Button className="btn-lg w-75 fw-bold text-white" type="submit" variant="primary">Book</Button></td>
                                         </tr>
                                     </tbody>
                                 </Table>
