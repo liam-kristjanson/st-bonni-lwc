@@ -1,4 +1,4 @@
-import { Button, Card, Col, Container, Form, Row, Table } from "react-bootstrap";
+import { Button, Card, Col, Container, Row, Table } from "react-bootstrap";
 
 import Navbar from "../components/Navbar"
 import useNavbar from '../components/hooks/useNavbar';
@@ -7,6 +7,9 @@ import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Appointment, Booking } from "../types";
 
+type ValuePiece = Date | null;
+type Value = ValuePiece | [ValuePiece, ValuePiece];
+
 export default function TimeAvail() {
     const {showMenu, handleMenuShow, handleMenuHide} = useNavbar();
 
@@ -14,39 +17,26 @@ export default function TimeAvail() {
     const { date } = state;
 
     const dateValue = (`${new Intl.DateTimeFormat('en', { year: "numeric" }).format(date)}-${new Intl.DateTimeFormat('en', { month: "2-digit" }).format(date)}-${new Intl.DateTimeFormat('en', { day: "2-digit" }).format(date)}`);
-    let isoDate = ((new Date(dateValue)).toISOString()).replace('Z', '+00:00');
     const displayDate = new Intl.DateTimeFormat('en-US', {dateStyle: "full"}).format(date);
 
+    const [startTime, setStartTime] = useState<Date>();
+    const [endTime, setEndTime] = useState<Date>();
     const [bookedTimes, setBookedTimes] = useState<string[]>([])
 
-    useEffect(() => {
-        const letMeCheck = (new Date(dateValue)).toISOString()
-        console.log(letMeCheck)
+    const [timeTable, setTimeTable] = useState<string[]>([]);
 
+    useEffect(() => {
         fetch(import.meta.env.VITE_SERVER + "/bookings?date=" + dateValue)
 
         .then(dateResponse => {
             return dateResponse.json()
         })
         .then(dateData => {
-            console.log("Date Data");
-            console.log(dateData);
-
             dateData.map((booking : Booking) => {
 
-                console.log("Booking Data");
-                console.log(booking);
-
-                //booking.bookings.map((appointment: Appointment) => {
-                    //let timeString = appointment.bookingTime.toLocaleTimeString();
-
-                    //console.log(timeString);
-                //})
-
-                //const bookedTime = (entry.startTime)
-
-                //.substring(11, 16);
-                //console.log(bookedTime)
+                booking.bookings.map((appointment: Appointment) => {
+                    //console.log(new Date(appointment.bookingTime));
+                })
             })
         })
     }, []);

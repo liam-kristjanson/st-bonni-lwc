@@ -15,8 +15,8 @@ export interface NavLink {
 
 export interface Booking {
     date: string,
-    startTime: string,
-    endTime: string,
+    startTime: Date,
+    endTime: Date,
     bookings: Appointment[],
     isAvailable: boolean,
 }

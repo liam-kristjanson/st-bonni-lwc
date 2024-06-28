@@ -58,10 +58,7 @@ export default function BookingAvail() {
         if (!Array.isArray(value)) {
             const date = new Date(value ?? "----");
             
-            const dateValue = (`${new Intl.DateTimeFormat('en', { year: "numeric" }).format(date)}
-                -${new Intl.DateTimeFormat('en', { month: "2-digit" }).format(date)}
-                -${new Intl.DateTimeFormat('en', { day: "2-digit" }).format(date)}`);
-                
+            const dateValue = (`${new Intl.DateTimeFormat('en', { year: "numeric" }).format(date)}-${new Intl.DateTimeFormat('en', { month: "2-digit" }).format(date)}-${new Intl.DateTimeFormat('en', { day: "2-digit" }).format(date)}`);
             const displayDate = new Intl.DateTimeFormat('en-US', {dateStyle: "full"}).format(date);
 
             setSelectedDate(value);
@@ -142,7 +139,8 @@ export default function BookingAvail() {
                             prev2Label={null}
 
                             tileClassName = {({date}) => {
-                                const dateValue = (`${new Intl.DateTimeFormat('en', { year: "numeric" }).format(date)}-${new Intl.DateTimeFormat('en', { month: "2-digit" }).format(date)}-${new Intl.DateTimeFormat('en', { day: "2-digit" }).format(date)}`);
+                                const dateData = new Date(date ?? "----");
+                                const dateValue = (`${new Intl.DateTimeFormat('en', { year: "numeric" }).format(dateData)}-${new Intl.DateTimeFormat('en', { month: "2-digit" }).format(dateData)}-${new Intl.DateTimeFormat('en', { day: "2-digit" }).format(dateData)}`);
 
                                 if (availableDates.includes(dateValue)) {
                                     return  'available'
