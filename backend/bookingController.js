@@ -1,5 +1,7 @@
+const { start } = require('repl');
 const dateHelpers = require('./dateHelpers.js')
 const dbRetriever = require('./dbretriever.js')
+const helpers = require('./helpers.js');
 
 module.exports.handleUpdateAvailability = async(req, res) => {
     try{
@@ -49,7 +51,7 @@ module.exports.handleUpdateAvailability = async(req, res) => {
           date: selectedDate,
           startTime: startTimeDate,
           endTime: endTimeDate,
-          bookings: [],
+          bookings: generateBookings(startTimeDate, endTimeDate),
           isAvailable: true
         }
   
@@ -64,8 +66,26 @@ module.exports.handleUpdateAvailability = async(req, res) => {
   
     }catch (err) {
       console.error("booking failed:", err);
-      res.status(400).json({ error: "An error occurred while trying to book" });
+      res.status(500).json({ error: "An error occurred while trying to book" });
   
     }    
   
+}
+
+function generateBookings(startTime, endTime) {
+  let generatedBookings = []
+
+  let hourlyTimestamps = helpers.generateHourlyTimeslots(startTime, endTime);
+
+  for (let i = 0; i<hourlyTimestamps.length-1; i++) {
+
+    generatedBookings.push({
+      startTime: new Date(hourlyTimestamps[i]),
+      endTime: new Date(hourlyTimestamps[i+1]),
+      isAvailable: true
+    });
+
   }
+
+  return generatedBookings;
+}
