@@ -32,10 +32,12 @@ module.exports.handleUpdateAvailability = async(req, res) => {
       //check if availability record exists on selected date
       let currentAvailability = await dbRetriever.fetchOneDocument('bookings', {date: selectedDate});
   
-      if(currentAvailability){
+      if(currentAvailability) {
         console.log("Found existing availability for " + req.body.date + " updating...")
-  
-        const result = await dbRetriever.updateOne('bookings', {date: selectedDate}, {$set: {'date': selectedDate, 'startTime': startTimeDate, 'endTime': endTimeDate}})
+
+        const newAvailabilitySlots = expandAvailabilitySlots(currentAvailability.bookings, currentAvailability.endTime, endTimeDate)
+        
+        const result = await dbRetriever.updateOne('bookings', {date: selectedDate}, {$set: {'date': selectedDate, 'startTime': startTimeDate, 'endTime': endTimeDate, 'bookings': newAvailabilitySlots}})
   
         console.log("Upserted record")
         console.log(result.upsertedCount)
@@ -45,7 +47,7 @@ module.exports.handleUpdateAvailability = async(req, res) => {
         } else {
           res.status(500).json({error: "Error updating availability to database"})
         }
-      }else{
+      } else {
         console.log("No availability found for " + req.body.date + " creating new...");
         let newAvailability = {
           date: selectedDate,
@@ -63,13 +65,10 @@ module.exports.handleUpdateAvailability = async(req, res) => {
           res.status(500).json({error: "Error inserting availability in database"});
         }
       }
-  
     }catch (err) {
       console.error("booking failed:", err);
       res.status(500).json({ error: "An error occurred while trying to book" });
-  
     }    
-  
 }
 
 function generateBookings(startTime, endTime) {
@@ -88,4 +87,18 @@ function generateBookings(startTime, endTime) {
   }
 
   return generatedBookings;
+}
+
+function expandAvailabilitySlots(bookingsArr, originalEndTime, newEndTime) {
+  let newTimeslots = helpers.generateHourlyTimeslots(originalEndTime, newEndTime);
+
+  for (let i = 1; i<newTimeslots.length-1; i++) {
+    bookingsArr.push({
+      startTime: new Date(newTimeslots[i]),
+      endTime: new Date(newTimeslots[i + 1]),
+      isAvailable: true
+    })
+  }
+
+  return bookingsArr;
 }
