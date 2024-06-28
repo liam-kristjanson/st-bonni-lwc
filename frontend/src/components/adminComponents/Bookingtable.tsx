@@ -10,12 +10,18 @@ import {
   Form,
 } from "react-bootstrap";
 
-const SlotCard = ({ slot }) => {
-  const startTime = new Date(slot.startTime).toLocaleTimeString([], {
+import { Booking, Slot } from "../../types";
+
+interface SlotCardProps {
+  slot: Slot;
+}
+
+const SlotCard = (props: SlotCardProps) => {
+  const startTime = new Date(props.slot.startTime).toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
   });
-  const endTime = new Date(slot.endTime).toLocaleTimeString([], {
+  const endTime = new Date(props.slot.endTime).toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
   });
@@ -26,26 +32,26 @@ const SlotCard = ({ slot }) => {
         <div className="fw-bold">
           {startTime} - {endTime}
         </div>
-        <Badge bg={slot.isAvailable ? "success" : "warning"} className="me-2">
-          {slot.isAvailable ? "Available" : "Booked"}
+        <Badge bg={props.slot.isAvailable ? "success" : "warning"} className="me-2">
+          {props.slot.isAvailable ? "Available" : "Booked"}
         </Badge>
-        {!slot.isAvailable && (
+        {!props.slot.isAvailable && (
           <>
             <br />
             <span className="me-2">
-              <strong>Customer Name:</strong> {slot.customerName || "N/A"}
+              <strong>Customer Name:</strong> {props.slot.customerName || "N/A"}
             </span>
             <br />
             <span>
-              <strong>Phone Number:</strong> {slot.phoneNumber || "N/A"}
+              <strong>Phone Number:</strong> {props.slot.phoneNumber || "N/A"}
             </span>
             <br />
             <span>
-              <strong>Email:</strong> {slot.email || "N/A"}
+              <strong>Email:</strong> {props.slot.email || "N/A"}
             </span>
             <br />
             <span>
-              <strong>Service:</strong> {slot.serviceType || "N/A"}
+              <strong>Service:</strong> {props.slot.serviceType || "N/A"}
             </span>
           </>
         )}
@@ -83,7 +89,7 @@ function BookingTable() {
       .catch((err) => console.error(err));
   }
 
-  function filterSlots(slots) {
+  function filterSlots(slots: Slot[]) {
     return slots.filter((slot) => {
       if (filter === "available") return slot.isAvailable;
       if (filter === "booked") return !slot.isAvailable;
@@ -116,7 +122,7 @@ function BookingTable() {
         onSelect={(k) => k && setActiveDate(k)}
         className="mb-3"
       >
-        {bookingData.map((dayData) => {
+        {bookingData.map((dayData : Booking) => {
           const date = new Date(dayData.date).toLocaleDateString();
           const filteredSlots = filterSlots(dayData.bookings);
           return (
