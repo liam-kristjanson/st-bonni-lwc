@@ -71,6 +71,10 @@ function setTimeOnDate(date, time) {
     return returnDate;
 }
 
+
+
+app.put("/bookings/:id", bookingController.handleUpdateBooking);
+
 app.listen(PORT, () => {
   console.log("Backend server running at http://localhost:" + PORT);
 });

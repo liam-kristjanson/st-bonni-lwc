@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Table } from "react-bootstrap";
 import { useAuthContext } from "../hooks/useAuthContext"
 import { Booking } from "../types";
-import AdminNavbar from "../components/AdminNavbar";
+import AdminNavbar from "../components/adminComponents/AdminNavbar";
 import useNavbar from "../components/hooks/useNavbar";
 import ServerMessageContainer from "../components/ServerMessageContainer";
 export default function AdminForm() {

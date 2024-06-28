@@ -1,79 +1,118 @@
-import { useState } from "react";
-import {useAuthContext} from "../hooks/useAuthContext"
-import { Button, Card, Col, Container, Row } from "react-bootstrap";
-import AdminNavbar from "../components/AdminNavbar";
-import useNavbar from "../components/hooks/useNavbar";
+// Import necessary dependencies and components
+import { useState,  } from "react";
+import { Container, Row, Col, Nav } from "react-bootstrap";
+import { FaCalendarAlt,  FaChartBar, FaCog } from "react-icons/fa";
 
-export default function AdminDashboard() {
-    const user = useAuthContext().state.user;
-    const [serverMessage, setServerMessage] = useState<string>('');
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const {showMenu, handleMenuHide, handleMenuShow} = useNavbar();
 
-    const logAuthToken = async () => {
-        console.log('Logging auth token');
+import AdminNavbar from "../components/adminComponents/AdminNavbar";
+import Analytics from "../components/adminComponents/Analytics";
+import Settings from "../components/adminComponents/Settings";
 
-        const HEADERS : HeadersInit = {
-            authorization: user?.authToken ?? ""
-        }
+import CreateAvailabilityTab from "../components/adminComponents/CreateAvailabilityTab";
 
-        const response = await fetch(import.meta.env.VITE_SERVER + '/log-auth-token', {
-            headers: HEADERS
-        });
 
-        if (response.ok) {
-            let responseText = await response.text();
-            setServerMessage(responseText);
-        }
-    }
-    
-    return (
-        <>
-            <Container>
-                <AdminNavbar
-                    showMenu={showMenu}
-                    menuHideHandler={handleMenuHide}
-                    menuShowHandler={handleMenuShow}
-                />
-            </Container>
 
-            <Container>
-                <Row>
-                    <Col>
-                        <h1 className="text-primary">Admin Dashboard</h1>
+// Define the AdminDashboard component
+const AdminDashboard = () => {
+  const [activeTab, setActiveTab] = useState("bookings"); //used for rendering the components{choices:"bookings","analytics","settings"}
 
-                        <Card className="shadow">
-                            <Card.Title className="p-2">
-                                Today's Bookings: 3
-                            </Card.Title>
+  {
+  // // State variable to store admin statistic **not useful now
+  // const [stats, setStats] = useState({
+  //   totalUsers: 0,
+  //   totalBookings: 0,
+  //   revenueThisMonth: 0,
+  // });
 
-                            <Card.Body>
-                                <Row>
-                                    <Col>
-                                        Job 1
-                                    </Col>
+  // // Custom hook for managing alert state and showing alerts
+  // const { alert, showAlert } = useAlert();
 
-                                    <Col><Button className="text-white fw-bold" variant="primary">View</Button></Col>
-                                </Row>
+  // // Function to fetch admin stats from the server 
+  // const fetchAdminStats = useCallback(async () => {
+  //   try {
+  //     const data = await fetchData(
+  //       `${import.meta.env.VITE_SERVER}/admin/stats`,
+  //       "Failed to fetch admin stats"
+  //     );
+  //     // Update the stats state with fetched data
+  //     setStats(data);
+  //   } catch (error) {
+  //     // Show an alert if there's an error fetching data
+  //     showAlert(error.message, "danger");
+  //   }
+  // }, [showAlert]);
 
-                                <Button className="text-white fw-bold" variant="primary">View Bookings</Button>
-                            </Card.Body>
-                        </Card>
+  // // Effect to fetch admin stats when the component mounts
+  // // Currently commented out, but can be enabled to load data on mount
+  // useEffect(() => {
+  //   // fetchAdminStats();
+  // }, [fetchAdminStats]);
 
-                        <p>User {JSON.stringify(user) ?? "Not found"}</p>
+  }
 
-                        <p>User email: {user?.email ?? "Not found"}</p>
+  // Render the component
+  return (
+    <div className="min-vh-100 bg-light">
+      <AdminNavbar />
+      <Container fluid className="py-4">
+        {/* Dashboard header */}
+        <Row className="mb-4">
+          <Col>
+            <h1>Admin Dashboard</h1>
+          </Col>
+        </Row>
 
-                        <p>User auth token: {user?.authToken ?? "Not found"}</p>
+        {/* Navigation tabs */}
+        <Row className="mb-4">
+          <Col>
+            <Nav variant="tabs">
+              {/* Bookings tab */}
+              <Nav.Item>
+                <Nav.Link
+                  active={activeTab === "bookings"}
+                  onClick={() => setActiveTab("bookings")}
+                >
+                  <FaCalendarAlt className="me-2" />
+                  Bookings
+                </Nav.Link>
+              </Nav.Item>
+              {/* Analytics tab */}
+              <Nav.Item>
+                <Nav.Link
+                  active={activeTab === "analytics"}
+                  onClick={() => setActiveTab("analytics")}
+                >
+                  <FaChartBar className="me-2" />
+                  Analytics
+                </Nav.Link>
+              </Nav.Item>
+              {/* Settings tab */}
+              <Nav.Item>
+                <Nav.Link
+                  active={activeTab === "settings"}
+                  onClick={() => setActiveTab("settings")}
+                >
+                  <FaCog className="me-2" />
+                  Settings
+                </Nav.Link>
+              </Nav.Item>
+            </Nav>
+          </Col>
+        </Row>
 
-                        <p>Local storage user: {localStorage.getItem('user')}</p>
+        {/* Render active tab content based on activeTab state */}
+        {activeTab === "bookings" && (
+          <CreateAvailabilityTab
+            stats={stats}
+            alert={alert}
+            showAlert={showAlert}
+          />
+        )}
+        {activeTab === "analytics" && <Analytics stats={stats} />}
+        {activeTab === "settings" && <Settings />}
+      </Container>
+    </div>
+  );
+};
 
-                        <Button onClick={logAuthToken}>Log auth token in backend</Button>
-
-                        <p>Server Message: {serverMessage}</p>
-                    </Col>
-                </Row>
-            </Container>
-        </>
-    )
-}
+export default AdminDashboard;

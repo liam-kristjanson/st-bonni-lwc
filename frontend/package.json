@@ -15,13 +15,15 @@
     "aos": "^3.0.0-beta.6",
     "bootstrap": "^5.3.3",
     "icons": "^1.0.0",
+    "lucide-react": "^0.397.0",
     "react": "^18.2.0",
-    "react-bootstrap": "^2.10.2",
+    "react-bootstrap": "^2.10.3",
     "react-calendar": "^5.0.0",
+    "react-datepicker": "^7.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^5.2.1",
     "react-responsive": "^10.0.0",
-    "react-router-dom": "^6.23.1",
+    "react-router-dom": "^6.24.0",
     "sass": "^1.77.6"
   },
   "devDependencies": {

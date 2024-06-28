@@ -80,6 +80,8 @@ export default function AdminNavbar(props: NavbarProps) {
                     <Offcanvas.Title>Navigation</Offcanvas.Title>
                 </Offcanvas.Header>
 
+                <div style={{ marginBottom: "90px" }}></div>
+
                 <Offcanvas.Body>
                     <div className="container">
                         <div className="row">
