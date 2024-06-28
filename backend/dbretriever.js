@@ -5,9 +5,6 @@ const password = process.env.cwvb_database_pw;
 const user = process.env.cwvb_database_user;
 const uri = 'mongodb+srv://' + process.env.MONGODB_USER + ':' + process.env.MONGODB_PASSWORD + '@cluster0.akkbhp7.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
 
-//PLEASE REMOVE THIS
-console.log("mongo uri: " + uri);
-
 const client = new MongoClient(uri);
 const database = client.db('st-bonni-lwc');
 

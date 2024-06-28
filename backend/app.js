@@ -69,4 +69,5 @@ app.post("/admin/availability", bookingController.handleUpdateAvailability);
 app.listen(PORT, () => {
   console.log("Backend server running at http://localhost:" + PORT);
   console.log("CORS configured to allow requests from " + process.env.FRONT_ORIGIN)
+  console.log("Specified timezone: ", process.env.TZ);
 });
