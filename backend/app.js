@@ -15,7 +15,8 @@ const PORT = process.env.PORT || 8080;
 
 const corsOptions = {
   origin: process.env.FRONT_ORIGIN,
-  optionsSuccessStatus: 200,
+  optionsSuccessStatus: 204,
+  "methods": "GET,HEAD,PUT,PATCH,POST,DELETE"
 };
 
 const app = express();
@@ -67,4 +68,5 @@ app.post("/admin/availability", bookingController.handleUpdateAvailability);
 
 app.listen(PORT, () => {
   console.log("Backend server running at http://localhost:" + PORT);
+  console.log("CORS configured to allow requests from " + process.env.FRONT_ORIGIN)
 });
