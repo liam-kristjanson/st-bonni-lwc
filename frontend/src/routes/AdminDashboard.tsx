@@ -3,6 +3,7 @@ import {useAuthContext} from "../hooks/useAuthContext"
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import AdminNavbar from "../components/AdminNavbar";
 import useNavbar from "../components/hooks/useNavbar";
+import Bookingtable from "../components/adminComponents/Bookingtable";
 
 export default function AdminDashboard() {
     const user = useAuthContext().state.user;
@@ -35,6 +36,8 @@ export default function AdminDashboard() {
                     menuShowHandler={handleMenuShow}
                 />
             </Container>
+
+            <Bookingtable/>
 
             <Container>
                 <Row>
