@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Container,
   Row,
@@ -80,7 +80,7 @@ function BookingTable() {
         if (data.length > 0)
           setActiveDate(new Date(data[0].date).toLocaleDateString());
       })
-      .catch((err) => console.log("An unknown error occurred"));
+      .catch((err) => console.error(err));
   }
 
   function filterSlots(slots) {
