@@ -128,7 +128,7 @@ const BookingTable = () => {
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_SERVER}/bookingsFilter?${queryParams}`
+        `${import.meta.env.VITE_SERVER}/bookingsfilter?${queryParams}`
       );
       if (!response.ok) throw new Error("Failed to fetch booking data");
       const data = await response.json();

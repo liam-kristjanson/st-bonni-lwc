@@ -53,7 +53,7 @@ app.get("/bookings", (req, res) => {
 
 
 //admin Dashboard 
-app.get("/bookingsFilter", async (req, res) => {
+app.get("/bookingsfilter", async (req, res) => {
     try {
         const { filter, startDate, endDate } = req.query;
         
@@ -103,46 +103,12 @@ app.get("/bookingsFilter", async (req, res) => {
             );
         }
 
-        // Get the aggregation cursor
-        const cursor = dbRetriever.getAggregateCursor("bookings", aggregationPipeline);
+        // Execute aggregation
+        const bookings = await dbRetriever.aggregateDocuments("bookings", aggregationPipeline);
 
-        // Set the response header for streaming JSON
-        res.setHeader('Content-Type', 'application/json');
-        res.write('{"bookings":[');
-
-        // Create a transform stream to process documents
-        const processDocument = new Transform({
-            objectMode: true,
-            transform(doc, encoding, callback) {
-                this.push(JSON.stringify(doc));
-                callback();
-            }
-        });
-
-        let isFirstDocument = true;
-
-        // Pipe the cursor through the transform stream to the response
-        cursor.stream()
-            .pipe(processDocument)
-            .on('data', (data) => {
-                if (!isFirstDocument) {
-                    res.write(',');
-                } else {
-                    isFirstDocument = false;
-                }
-                res.write(data);
-            })
-            .on('error', (error) => {
-                console.error("Error in stream:", error);
-                res.status(500).end(']}');
-            })
-            .on('end', () => {
-                res.write(']}');
-                res.end();
-            });
-
+        res.json({ bookings });
     } catch (error) {
-        console.error("Error setting up booking stream:", error);
+        console.error("Error fetching bookings:", error);
         res.status(500).json({ message: 'Error fetching bookings', error: error.message });
     }
 });
