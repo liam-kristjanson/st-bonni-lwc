@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+
 import {
   Container,
   Row,
@@ -8,141 +9,237 @@ import {
   Tab,
   Badge,
   Form,
+  Card,
 } from "react-bootstrap";
 
-const SlotCard = ({ slot }) => {
+import { Clock, User, Phone, Mail, Briefcase, Filter } from "lucide-react";
+
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
+interface Slot {
+  startTime: string;
+  endTime: string;
+  isAvailable: boolean;
+  customerName?: string;
+  phoneNumber?: string;
+  email?: string;
+  serviceType?: string;
+}
+
+interface DayData {
+  date: string;
+  bookings: Slot[];
+}
+
+const SlotCard = ({ slot }: { slot: Slot }) => {
   const startTime = new Date(slot.startTime).toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
   });
+
   const endTime = new Date(slot.endTime).toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
   });
 
   return (
-    <div className="d-flex align-items-center border-bottom py-2">
-      <div className="flex-grow-1">
-        <div className="fw-bold">
-          {startTime} - {endTime}
-        </div>
-        <Badge bg={slot.isAvailable ? "success" : "warning"} className="me-2">
-          {slot.isAvailable ? "Available" : "Booked"}
-        </Badge>
-        {!slot.isAvailable && (
-          <>
-            <br />
-            <span className="me-2">
-              <strong>Customer Name:</strong> {slot.customerName || "N/A"}
-            </span>
-            <br />
-            <span>
-              <strong>Phone Number:</strong> {slot.phoneNumber || "N/A"}
-            </span>
-            <br />
-            <span>
-              <strong>Email:</strong> {slot.email || "N/A"}
-            </span>
-            <br />
-            <span>
-              <strong>Service:</strong> {slot.serviceType || "N/A"}
-            </span>
-          </>
-        )}
-      </div>
-      <Button variant="outline-primary" size="sm">
-        Manage Slot
-      </Button>
-    </div>
+    <Card className="mb-3" border={slot.isAvailable ? "success" : "warning"}>
+      <Card.Body>
+        <Row className="align-items-center">
+          <Col md={3} className="mb-3 mb-md-0">
+            <div className="d-flex align-items-center">
+              <Clock className="me-2 text-muted" size={24} />
+              <span className="fs-5 fw-bold">
+                {startTime} - {endTime}
+              </span>
+            </div>
+          </Col>
+          <Col md={5} className="mb-3 mb-md-0">
+            {!slot.isAvailable && (
+              <Row>
+                <Col sm={6} className="mb-2 mb-sm-0">
+                  <div className="d-flex align-items-center">
+                    <User size={18} className="me-2 text-muted" />
+                    <span>{slot.customerName || "N/A"}</span>
+                  </div>
+                  <div className="d-flex align-items-center mt-2">
+                    <Phone size={18} className="me-2 text-muted" />
+                    <span>{slot.phoneNumber || "N/A"}</span>
+                  </div>
+                </Col>
+                <Col sm={6}>
+                  <div className="d-flex align-items-center">
+                    <Mail size={18} className="me-2 text-muted" />
+                    <span>{slot.email || "N/A"}</span>
+                  </div>
+                  <div className="d-flex align-items-center mt-2">
+                    <Briefcase size={18} className="me-2 text-muted" />
+                    <span>{slot.serviceType || "N/A"}</span>
+                  </div>
+                </Col>
+              </Row>
+            )}
+            {slot.isAvailable && (
+              <div className="fs-6 text-muted">
+                No booking information available
+              </div>
+            )}
+          </Col>
+          <Col md={2} className="mb-3 mb-md-0 text-md-center">
+            <Badge
+              bg={slot.isAvailable ? "success" : "warning"}
+              className="fs-6 px-3 py-2"
+            >
+              {slot.isAvailable ? "Available" : "Booked"}
+            </Badge>
+          </Col>
+
+          {/* Needs to have proper feature for admin to change the db fields */}
+          <Col md={2} className="text-md-end">
+            <Button variant="outline-primary">Manage Slot</Button>
+          </Col>
+        </Row>
+      </Card.Body>
+    </Card>
   );
 };
 
-function BookingTable() {
-  const [bookingData, setBookingData] = useState([]);
-  const [activeDate, setActiveDate] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [filter, setFilter] = useState("all");
+const BookingTable = () => {
+  const [bookingData, setBookingData] = useState<DayData[]>([]);
+  const [activeDate, setActiveDate] = useState<string>("");
+  const [filter, setFilter] = useState<string>("today");
+  const [startDate, setStartDate] = useState<Date>(new Date());
+  const [endDate, setEndDate] = useState<Date>(new Date());
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     fetchBookingData();
-  }, []);
+  }, [filter, startDate, endDate]);
 
-  function fetchBookingData() {
-    setLoading(true);
-    fetch(`${import.meta.env.VITE_SERVER}/bookings`)
-      .then((response) => {
-        if (!response.ok) throw new Error("Failed to fetch booking data");
-        return response.json();
-      })
-      .then((data) => {
-        setBookingData(data);
-        setLoading(false);
-        if (data.length > 0)
-          setActiveDate(new Date(data[0].date).toLocaleDateString());
-      })
-      .catch((err) => console.log("An unknown error occurred"));
-  }
+  async function fetchBookingData() {
+    setIsLoading(true);
 
-  function filterSlots(slots) {
-    return slots.filter((slot) => {
-      if (filter === "available") return slot.isAvailable;
-      if (filter === "booked") return !slot.isAvailable;
-      return true;
+    const queryParams = new URLSearchParams({
+      filter,
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString(),
     });
+
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_SERVER}/bookingsFilter?${queryParams}`
+      );
+      if (!response.ok) throw new Error("Failed to fetch booking data");
+      const data = await response.json();
+      setBookingData(data.bookings);
+
+      if (data.bookings.length > 0 && !activeDate) {
+        setActiveDate(data.bookings[0].date);
+      }
+    } catch (error) {
+      console.error("Error fetching booking data:", error);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
-  //to display error/loading message while fetching data from server
+  const handleFilterChange = (newFilter: string) => {
+    setFilter(newFilter);
+  };
 
-  if (loading)
-    return <div className="text-center p-5">Loading booking data...</div>;
+  const handleDateChange = (date: Date | null, isStart: boolean) => {
+    if (date) {
+      if (isStart) {
+        setStartDate(date);
+      } else {
+        setEndDate(date);
+      }
+    }
+  };
 
   return (
     <Container fluid className="p-3">
-      <h1 className="mb-4 text-center">Booking Slots (Admin View)</h1>
+      <h1 className="mb-4 text-center">Booking Slots</h1>
       <Row className="mb-3">
-        <Col md={4}>
+        <Col md={12} className="mb-2">
+          <div className="d-flex align-items-center">
+            <Filter size={18} className="me-2 text-primary" />
+            <span className="fw-bold text-primary">Filter Bookings</span>
+          </div>
+        </Col>
+        <Col md={3}>
           <Form.Select
             value={filter}
-            onChange={(e) => setFilter(e.target.value)}
+            onChange={(e) => handleFilterChange(e.target.value)}
           >
-            <option value="all">All Slots</option>
+            <option value="today">Today's Slots</option>
             <option value="available">Available Slots</option>
             <option value="booked">Booked Slots</option>
+            <option value="dateRange">Date Range</option>
           </Form.Select>
         </Col>
+        {filter === "dateRange" && (
+          <Col md={6}>
+            <div className="d-flex">
+              <DatePicker
+                selected={startDate}
+                onChange={(date) => handleDateChange(date, true)}
+                selectsStart
+                startDate={startDate}
+                endDate={endDate}
+                className="form-control me-2"
+              />
+              <DatePicker
+                selected={endDate}
+                onChange={(date) => handleDateChange(date, false)}
+                selectsEnd
+                startDate={startDate}
+                endDate={endDate}
+                minDate={startDate}
+                className="form-control"
+              />
+            </div>
+          </Col>
+        )}
       </Row>
-      <Tabs
-        activeKey={activeDate}
-        onSelect={(k) => k && setActiveDate(k)}
-        className="mb-3"
-      >
-        {bookingData.map((dayData) => {
-          const date = new Date(dayData.date).toLocaleDateString();
-          const filteredSlots = filterSlots(dayData.bookings);
-          return (
-            <Tab
-              eventKey={date}
-              title={`${date} (${filteredSlots.length})`}
-              key={date}
-            >
-              <div className="border rounded">
-                <div className="bg-light p-2 border-bottom fw-bold">
-                  <div className="row">
-                    <div className="col">Time</div>
+
+      {isLoading ? (
+        <div className="text-center">Loading...</div>
+      ) : (
+        <>
+          <Tabs
+            activeKey={activeDate}
+            onSelect={(k) => k && setActiveDate(k)}
+            className="mb-3"
+          >
+            {bookingData.map((dayData) => (
+              <Tab
+                eventKey={dayData.date}
+                title={`${new Date(dayData.date).toLocaleDateString()} (${
+                  dayData.bookings.length
+                })`}
+                key={dayData.date}
+              >
+                <div className="border rounded">
+                  <div className="bg-light p-2 border-bottom fw-bold">
+                    <div className="row">
+                      <div className="col">Time</div>
+                    </div>
+                  </div>
+                  <div className="p-2">
+                    {dayData.bookings.map((slot, index) => (
+                      <SlotCard key={index} slot={slot} />
+                    ))}
                   </div>
                 </div>
-                <div className="p-2">
-                  {filteredSlots.map((slot, index) => (
-                    <SlotCard key={index} slot={slot} />
-                  ))}
-                </div>
-              </div>
-            </Tab>
-          );
-        })}
-      </Tabs>
+              </Tab>
+            ))}
+          </Tabs>
+        </>
+      )}
     </Container>
   );
-}
+};
 
 export default BookingTable;

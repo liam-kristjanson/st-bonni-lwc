@@ -83,6 +83,12 @@ async function deleteDocumentById(collectionName, oid) {
     return result;
 }
 
+async function aggregateDocuments(collectionName, pipeline) {
+    let collection = database.collection(collectionName);
+    return await collection.aggregate(pipeline).toArray();
+}
+
+
 module.exports.fetchDocuments = fetchDocuments;
 module.exports.fetchOneDocument = fetchOneDocument;
 module.exports.fetchDocumentById = fetchDocumentById;
@@ -90,3 +96,5 @@ module.exports.fetchOrdered = fetchOrdered;
 module.exports.updateOne = updateOne;
 module.exports.insertOne = insertOne;
 module.exports.deleteDocumentById = deleteDocumentById;
+module.exports.aggregateDocuments=aggregateDocuments;
+
