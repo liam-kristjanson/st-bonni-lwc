@@ -10,7 +10,7 @@ const jwt = require("jsonwebtoken");
 //local modules
 const authController = require('./authController.js')
 const bookingController = require('./bookingController.js')
-
+const reviewController = require('./reviewController.js')
 const PORT = process.env.PORT || 8080;
 
 const corsOptions = {
@@ -26,6 +26,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 //login route
 app.post("/login", authController.handleLogin);
+app.get("/reviews", reviewController.submitReview);
 
 app.get('/user', (req, res) => {
     dbRetriever.fetchOneDocument('users', {username: 'admin'}).then(user => {
@@ -41,6 +42,14 @@ app.get("/bookings", (req, res) => {
     });
 });
 app.post("/availability", bookingController.handleUpdateAvailability);
+
+app.get("/reviews", (req, res) => {
+    dbRetriever.fetchDocuments("reviews", {})
+    .then(reviewInfo => {
+        res.json(reviewInfo);
+    });
+});
+app.post("/reviews", reviewController.submitReview)
 
 app.get('/log-auth-token', (req, res) => {
     let verifiedAuthToken = jwt.verify(req.headers.authorization, process.env.JWT_SECRET);
