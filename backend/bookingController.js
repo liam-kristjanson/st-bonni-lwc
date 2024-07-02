@@ -89,3 +89,10 @@ function generateBookings(startTime, endTime) {
 
   return generatedBookings;
 }
+
+module.exports.bookSlot = async (req, res) => {
+
+  let dayRecord = await dbRetriever.fetchOneDocument('bookings', {date: new Date(req.body.selectedDate)})
+
+  res.status(200).json(dayRecord);
+}

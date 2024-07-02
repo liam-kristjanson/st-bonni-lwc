@@ -75,6 +75,7 @@ app.get('/log-auth-token', (req, res) => {
 }) 
 
 app.post("/admin/availability", bookingController.handleUpdateAvailability);
+app.post("/book-slot", bookingController.bookSlot);
 
 app.listen(PORT, () => {
   console.log("Backend server running at http://localhost:" + PORT);
