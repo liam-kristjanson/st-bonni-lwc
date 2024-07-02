@@ -2,7 +2,7 @@ import Icon from '@mdi/react';
 import { mdiAccountCircleOutline} from '@mdi/js';
 //import { Card } from 'react-bootstrap';
 import { mdiStarSettingsOutline } from '@mdi/js';
-import { Col, Container, Row } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
 
 
 

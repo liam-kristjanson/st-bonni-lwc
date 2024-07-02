@@ -10,7 +10,7 @@ import AdminBook from "./routes/AdminBook";
 import Login from "./routes/Login";
 import AdminDashboard from "./routes/AdminDashboard";
 import Schedule from "./routes/Schedule";
-import CustomerRev from "./components/CustomerRev";
+import Reviews from "./routes/Reviews";
 
 
 export const router = createBrowserRouter([
@@ -55,8 +55,8 @@ export const router = createBrowserRouter([
         element:<Schedule />
     },
     {
-        path:"/customer",
-        element:<CustomerRev/>
+        path:"/reviews",
+        element:<Reviews/>
     }
 
 ])
