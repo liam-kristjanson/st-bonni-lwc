@@ -73,13 +73,9 @@ export default function BookingAvail() {
         }
     }
 
-    function handleModalHide(){
-        setShowModal(false);
-    }
-
     return (
         <>
-            <Modal show={showModal} onHide={handleModalHide}>
+            <Modal show={showModal} onHide={() => {setShowModal(false)}}>
                 <Modal.Header closeButton>
                     <Icon path={mdiCalendarBlankOutline} size={1} /> &nbsp;&nbsp;&nbsp;&nbsp; <div className="pe-4 pb-1 w-100 text-center">{modalText?.toString() ?? "----"}</div>
                 </Modal.Header>
