@@ -63,7 +63,7 @@ return(
                                 Bookings
                                 </li>
 
-                                <li className="text-md-center">
+                                <li className="text-md-center" role="button" onClick={() => {navigate('/reviews')}}>
                                 <Icon path={mdiMessageDraw} size={1.5} className="d-none d-md-inline" />
                                 <Icon path={mdiMessageDraw} size={1} className=" d-md-none"/>
                                 Reviews

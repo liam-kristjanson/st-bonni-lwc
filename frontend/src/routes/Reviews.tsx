@@ -9,16 +9,19 @@ import Icon from '@mdi/react';
 import { mdiStar } from '@mdi/js';
 import ServerMessageContainer from "../components/ServerMessageContainer";
 import { useSearchParams } from 'react-router-dom';
+import Navbar from '../components/Navbar';
+import useNavbar from '../components/hooks/useNavbar';
  
 
 export default function Reviews() {
+
+    const {showMenu, handleMenuHide, handleMenuShow} = useNavbar();
 
     const [date, setDate] = useState<string>('')
     const [isLoading, formIsLoading] = useState<boolean>(false);
     const [name, setName] = useState<string>("")
     const [rating, setRating] = useState<number>(0);
     const [comments, setComment] = useState<string>("");
-    const [searchParams] = useSearchParams();
     const [serverMessage, setServerMessage] = useState<string>('');
     const [serverMessageType, setServerMessageType] = useState<'success' | 'danger'>('success');
     const [reviewKey, setReviewKey] = useState<string>("");
@@ -82,12 +85,20 @@ export default function Reviews() {
     return(
         <>
         <Container>
-        <Row>
-            
-            <Col>
+            <Navbar
+                showMenu={showMenu}
+                menuHideHandler={handleMenuHide}
+                menuShowHandler={handleMenuShow}
+            />
+        </Container>
 
-                <p>Search params: {"ID: " + searchParams.get('id')}</p>
-            
+        <Container>
+        <Row className='mb-5'>
+            {/* Spacing from navbar */}
+        </Row>
+        
+        <Row>
+            <Col>
                 <Card className="shadow mb-3">
                         <h1 className=" text-primary text-center fw-bolder">Reviews</h1>
                         <hr></hr>
@@ -115,13 +126,20 @@ export default function Reviews() {
 
                                 <Form.Group className="mb-3 fw-bolder mt-4">
                                     <Form.Label>What service did you receive?</Form.Label>
+
+                                    <Dropdown>
                                     {/* <Form.Control className=" d-flex row rounded-5 " placeholder=" First Name" type='name' value={nameF} onChange={handleServiceChange} required/> */}
-                                    <DropdownButton id="dropdown-basic-button" title="Various Services Offered" typeof='lg' className='primary'>
+                                    <Dropdown.Toggle id="dropdown-basic-button" title="Various Services Offered" typeof='lg' variant="primary" className='text-white fw-bold'>
+                                        Select Service Type
+                                    </Dropdown.Toggle>
+
+                                    <Dropdown.Menu>
                                         <Dropdown.Item href="#/action-1">Service 1</Dropdown.Item>
                                         <Dropdown.Item href="#/action-2">Service 2</Dropdown.Item>
                                         <Dropdown.Item href="#/action-3">Service 3</Dropdown.Item>
-                                    </DropdownButton>
+                                    </Dropdown.Menu>
                                     
+                                    </Dropdown>
                                 </Form.Group>
 
                                 <Form.Group className="mb-3 mt-4 fw-bolder">
@@ -146,7 +164,7 @@ export default function Reviews() {
 
                                 <Form.Group className="mb-3 mt-4 fw-bolder">
                                     <Form.Label>Comments about your service</Form.Label>
-                                    <Form.Control className="container  border rounded-5 shadow-lg p-5 border border-primary  position-relative" value={comments} type="comments" placeholder='Tell us about yourself' onChange={(e) => handleNewComment(e.target.value)} required/>
+                                    <Form.Control className="container  border rounded-5 shadow-lg p-5 border border-primary  position-relative" value={comments} type="comments" placeholder='Tell us about your experience' onChange={(e) => handleNewComment(e.target.value)} required/>
                                         
                                     
                                 </Form.Group>
@@ -154,7 +172,7 @@ export default function Reviews() {
                                     {isLoading ? (
                                         <Spinner/>
                                         ) : (           
-                                        <Button className="rounded-4 mt-4 mb-3" type="submit">Submit</Button>
+                                        <Button className="rounded-4 mt-4 mb-3 text-white btn-lg fw-bold w-100" type="submit">Submit</Button>
                                     )}
                                     {serverMessage && <ServerMessageContainer variant={serverMessageType} message={serverMessage}/>}
                             </Form>
