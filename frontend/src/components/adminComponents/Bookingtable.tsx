@@ -241,7 +241,7 @@ const BookingTable = () => {
             <div className="d-flex">
               <DatePicker
                 selected={startDate}
-                onChange={(date) => handleDateChange(date, true)}
+                onChange={(date: Date | null) => handleDateChange(date, true)}
                 selectsStart
                 startDate={startDate}
                 endDate={endDate}
@@ -249,7 +249,7 @@ const BookingTable = () => {
               />
               <DatePicker
                 selected={endDate}
-                onChange={(date) => handleDateChange(date, false)}
+                onChange={(date: Date | null) => handleDateChange(date, false)}
                 selectsEnd
                 startDate={startDate}
                 endDate={endDate}
