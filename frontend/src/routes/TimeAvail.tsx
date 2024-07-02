@@ -1,4 +1,4 @@
-import { Button, Card, Col, Container, Row, Table } from "react-bootstrap";
+import { Button, Card, Col, Container, Form, Modal, Row, Table } from "react-bootstrap";
 
 import Navbar from "../components/Navbar"
 import useNavbar from '../components/hooks/useNavbar';
@@ -15,6 +15,7 @@ export default function TimeAvail() {
 
     const { state } = useLocation();
     const { date } = state;
+    const [showBookingModal, setShowBookingModal] = useState<boolean>(false);
 
     //const dateValue = (`${new Intl.DateTimeFormat('en', { year: "numeric" }).format(date)}-${new Intl.DateTimeFormat('en', { month: "2-digit" }).format(date)}-${new Intl.DateTimeFormat('en', { day: "2-digit" }).format(date)}`);
     const displayDate = new Intl.DateTimeFormat('en-US', {dateStyle: "full"}).format(date);
@@ -70,7 +71,7 @@ export default function TimeAvail() {
                                                 <td className="text-center align-middle">{new Date(timeslot.endTime).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}</td>
                                                 
                                                 {timeslot.isAvailable === true ? (
-                                                    <td><td className="d-flex justify-content-center"><Button className="btn-sm w-75 fw-bold text-white" type="submit" variant="primary">Available</Button></td></td>
+                                                    <td><td className="d-flex justify-content-center"><Button onClick={() => {setShowBookingModal(true)}}className="btn-sm w-75 fw-bold text-white" type="submit" variant="primary">Book Now</Button></td></td>
                                                 ) : (
                                                     <td><td className="d-flex justify-content-center"><Button className="btn-sm w-75 fw-bold text-white" type="submit" variant="danger" disabled>Unavailable</Button></td></td>
                                                 )}
@@ -83,6 +84,24 @@ export default function TimeAvail() {
                     </Col>
                 </Row>
             </Container>
+
+            <Modal show={showBookingModal} onHide={() => {setShowBookingModal(false)}}>
+                <Modal.Header closeButton>
+                    Request booking for {displayDate}
+                </Modal.Header>
+
+                <Modal.Body>
+                    <Form>
+                        <Form.Group>
+                            <Form.Label>
+                                Email:
+                            </Form.Label>
+
+                            <Form.Control type="email"/>
+                        </Form.Group>
+                    </Form>
+                </Modal.Body>
+            </Modal>
         </>
     )
 }
