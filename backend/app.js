@@ -49,7 +49,7 @@ app.get("/bookings", (req, res) => {
 
     if (req.query.date) {
         console.log("Fetching records for date " + new Date(req.query.date + " 00:00"))
-        retrieveDoc = dbRetriever.fetchDocuments("bookings", {date: new Date(req.query.date + " 00:00")})
+        retrieveDoc = dbRetriever.fetchOneDocument("bookings", {date: new Date(req.query.date + " 00:00")})
     } else {
         console.log("Fetching records for any date");
         retrieveDoc = dbRetriever.fetchDocuments("bookings", {})

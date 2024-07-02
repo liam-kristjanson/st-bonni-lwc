@@ -16,28 +16,20 @@ export default function TimeAvail() {
     const { state } = useLocation();
     const { date } = state;
 
-    const dateValue = (`${new Intl.DateTimeFormat('en', { year: "numeric" }).format(date)}-${new Intl.DateTimeFormat('en', { month: "2-digit" }).format(date)}-${new Intl.DateTimeFormat('en', { day: "2-digit" }).format(date)}`);
+    //const dateValue = (`${new Intl.DateTimeFormat('en', { year: "numeric" }).format(date)}-${new Intl.DateTimeFormat('en', { month: "2-digit" }).format(date)}-${new Intl.DateTimeFormat('en', { day: "2-digit" }).format(date)}`);
     const displayDate = new Intl.DateTimeFormat('en-US', {dateStyle: "full"}).format(date);
 
-    const [startTime, setStartTime] = useState<Date>();
-    const [endTime, setEndTime] = useState<Date>();
-    const [bookedTimes, setBookedTimes] = useState<string[]>([])
-
-    const [timeTable, setTimeTable] = useState<string[]>([]);
+    const [timeslots, setTimeslots] = useState<Booking[]>([]);
 
     useEffect(() => {
-        fetch(import.meta.env.VITE_SERVER + "/bookings?date=" + dateValue)
+        fetch(import.meta.env.VITE_SERVER + "/bookings?date=" + encodeURIComponent(date.toLocaleDateString()))
 
         .then(dateResponse => {
             return dateResponse.json()
         })
         .then(dateData => {
-            dateData.map((booking : Booking) => {
-
-                booking.bookings.map((appointment: Appointment) => {
-                    //console.log(new Date(appointment.bookingTime));
-                })
-            })
+            console.log(dateData);
+            setTimeslots(dateData.bookings);
         })
     }, []);
 
@@ -52,13 +44,15 @@ export default function TimeAvail() {
             </Container>
 
             <Container className="fluid" style={{"paddingBottom": "100px"}}>
-                <div style={{"paddingBottom": "20px"}}></div>
+                <div style={{"paddingBottom": "30px"}}></div>
 
                 <Row className="text-center mb-2">
                     <div className="col">
                         <h1 className="text-primary">{displayDate}</h1>
                     </div>
                 </Row>
+
+                <div style={{"paddingBottom": "20px"}}></div>
 
                 <Row className="justify-content-center mb-5">
                     <Col className="col-md-8">
@@ -68,12 +62,20 @@ export default function TimeAvail() {
                             </Card.Header>
 
                             <Card.Body>
-                                <Table striped hover style={{"tableLayout": "fixed"}}>
+                                <Table hover style={{"tableLayout": "fixed"}}>
                                     <tbody>
-                                        <tr>
-                                            <td className="text-center align-middle">9:00 AM - 10:00 AM</td>
-                                            <td className="d-flex justify-content-center"><Button className="btn-lg w-75 fw-bold text-white" type="submit" variant="primary">Book</Button></td>
-                                        </tr>
+                                        {timeslots.map((timeslot) => (
+                                            <tr>
+                                                <td className="text-center align-middle">{new Date(timeslot.startTime).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}</td>
+                                                <td className="text-center align-middle">{new Date(timeslot.endTime).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}</td>
+                                                
+                                                {timeslot.isAvailable === true ? (
+                                                    <td><td className="d-flex justify-content-center"><Button className="btn-sm w-75 fw-bold text-white" type="submit" variant="primary">Available</Button></td></td>
+                                                ) : (
+                                                    <td><td className="d-flex justify-content-center"><Button className="btn-sm w-75 fw-bold text-white" type="submit" variant="danger" disabled>Unavailable</Button></td></td>
+                                                )}
+                                            </tr>
+                                        ))}
                                     </tbody>
                                 </Table>
                             </Card.Body>
