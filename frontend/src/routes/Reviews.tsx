@@ -4,11 +4,9 @@ import { Col, Container, Row } from 'react-bootstrap';
 import { Button, Card,  Form, Spinner } from "react-bootstrap";
 import { useState} from "react";
 import Dropdown from 'react-bootstrap/Dropdown';
-import DropdownButton from 'react-bootstrap/DropdownButton';
 import Icon from '@mdi/react';
 import { mdiStar } from '@mdi/js';
 import ServerMessageContainer from "../components/ServerMessageContainer";
-import { useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import useNavbar from '../components/hooks/useNavbar';
  
