@@ -23,7 +23,7 @@ export default function Reviews() {
     const [serverMessageType, setServerMessageType] = useState<'success' | 'danger'>('success');
     const [reviewKey, setReviewKey] = useState<string>("");
 
-    const handleStarClick = (selectedRating) => {
+    const handleStarClick = (selectedRating : number) => {
         setRating(selectedRating);
     }
 
@@ -52,7 +52,7 @@ export default function Reviews() {
             "content-type" : "application/json"
         }
 
-    let response = await fetch(import.meta.env.VITE_SERVER + '/reviews', {
+    const response = await fetch(import.meta.env.VITE_SERVER + '/reviews', {
         method: "POST",
         body: JSON.stringify({
             date: date,
@@ -130,12 +130,14 @@ export default function Reviews() {
                                         
                                             {[1, 2, 3, 4, 5].map((star) => {
                                                 return (
+                                                    <div onClick={() => handleStarClick(star)}>
                                                     <Icon
                                                         key={star}
                                                         path={mdiStar}
                                                         size={1.9}
                                                         style={{ color: star <= rating ? 'gold' : 'gray' }}
-                                                        onClick={() => handleStarClick(star)} />
+                                                        />
+                                                    </div>
                                                 );
                                             })}
 

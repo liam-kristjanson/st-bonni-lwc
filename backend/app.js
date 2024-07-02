@@ -1,11 +1,12 @@
 //Dependencies
 require("dotenv").config();
+
 const dbRetriever = require("./dbretriever.js");
 const express = require("express");
 const bodyParser = require("body-parser");
-const encrypt = require("./encrypt");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
+const { Transform } = require('stream');
 
 //local modules
 const authController = require('./authController.js')
@@ -15,18 +16,28 @@ const PORT = process.env.PORT || 8080;
 
 const corsOptions = {
   origin: process.env.FRONT_ORIGIN,
-  optionsSuccessStatus: 200,
+  optionsSuccessStatus: 204,
+  "methods": "GET,HEAD,PUT,PATCH,POST,DELETE"
 };
 
 const app = express();
 
+//all-route middleware
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(authController.jwtParser)
+
+//route-groupe middleware
+app.use('/admin/', authController.verifyAdmin);
 
 //login route
 app.post("/login", authController.handleLogin);
 app.get("/reviews", reviewController.submitReview);
+
+app.get('/', (req, res) => {
+    res.send('Service is running');
+})
 
 app.get('/user', (req, res) => {
     dbRetriever.fetchOneDocument('users', {username: 'admin'}).then(user => {
@@ -41,7 +52,10 @@ app.get("/bookings", (req, res) => {
         res.json(bookingData);
     });
 });
-app.post("/availability", bookingController.handleUpdateAvailability);
+
+
+//admin Dashboard 
+app.get("/bookingsfilter", bookingController.getFilteredBookings);
 
 app.get("/reviews", (req, res) => {
     dbRetriever.fetchDocuments("reviews", {})
@@ -63,23 +77,11 @@ app.get('/log-auth-token', (req, res) => {
     res.send('Auth token has been logged in the backend');
 }) 
 
-function setTimeOnDate(date, time) {
-    timeHours = parseInt(time.substring(0, 2));
-    timeMinutes = parseInt(time.substring(3,5));
-
-    console.log("TIME HOURS:", timeHours);
-    console.log("TIME MINUTES", timeMinutes)
-
-    let returnDate = new Date(date);
-
-    returnDate.setHours(timeHours);
-    returnDate.setMinutes(timeMinutes);
-    returnDate.setSeconds(0);
-    returnDate.setMilliseconds(0);
-
-    return returnDate;
-}
+app.post("/admin/availability", bookingController.handleUpdateAvailability);
+app.post("/admin/generate-review-link", bookingController.generateReviewLink);
 
 app.listen(PORT, () => {
   console.log("Backend server running at http://localhost:" + PORT);
+  console.log("CORS configured to allow requests from " + process.env.FRONT_ORIGIN)
+  console.log("Specified timezone: ", process.env.TZ);
 });

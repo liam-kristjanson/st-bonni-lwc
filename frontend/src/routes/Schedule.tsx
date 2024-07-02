@@ -1,5 +1,5 @@
 import { Button, Card, Col, Container, Form, Row, Spinner } from "react-bootstrap";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Table } from "react-bootstrap";
 import { useAuthContext } from "../hooks/useAuthContext"
 import { Booking } from "../types";
@@ -20,6 +20,13 @@ const [bookings, setBookings] = useState<Booking[]>();
 const [serverMessage, setServerMessage] = useState<string>('');
 const [serverMessageType, setServerMessageType] = useState<'success' | 'danger'>('success');
 
+const reqHeaders = useMemo<HeadersInit>(() : HeadersInit => {
+  return {
+    "content-type" : "application/json",
+    "authorization": user?.token ?? "none"
+  }
+}, [user?.token])
+
 function handleStartTimeChange(e: React.ChangeEvent<HTMLInputElement>){
   setStartTime(e.target.value);
 }
@@ -38,11 +45,7 @@ async function handleSubmit(e: React.FormEvent<HTMLFormElement>){
   console.log("Processing time confirmation...");
   setIsLoading(true);
 
-  const reqHeaders = {
-    "content-type" : "application/json"
-  }
-
-  let response = await fetch(import.meta.env.VITE_SERVER + '/availability', {
+  const response = await fetch(import.meta.env.VITE_SERVER + '/admin/availability', {
     method: "POST",
     body: JSON.stringify({
       startTime: startTime,
@@ -66,17 +69,9 @@ async function handleSubmit(e: React.FormEvent<HTMLFormElement>){
   fetchAndUpdateSchedule();
 }
 
-  useEffect(() => {
-    fetchAndUpdateSchedule();
-  }, []);
-
-  function fetchAndUpdateSchedule() {
-    const requestHeaders: HeadersInit = {
-      authorization: user?.authToken ?? "none"
-    }
-
+  const fetchAndUpdateSchedule  = useCallback(() => {
     fetch(import.meta.env.VITE_SERVER + '/bookings', {
-      headers: requestHeaders
+      headers: reqHeaders
     })
     .then(response => {
       setIsLoading(false);
@@ -94,8 +89,11 @@ async function handleSubmit(e: React.FormEvent<HTMLFormElement>){
     .catch(error => {
       console.error("Error fetching data", error);
     })
-  }
-  
+  }, [reqHeaders]);
+
+  useEffect(() => {
+    fetchAndUpdateSchedule();
+  }, [fetchAndUpdateSchedule]);
 
 return( 
   <>
@@ -161,6 +159,7 @@ return(
                   <th>Date</th>
                   <th>Start Time</th>
                   <th>End Time</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
 
@@ -176,6 +175,7 @@ return(
                       <td>{new Date(booking.date).toLocaleDateString()}</td>
                       <td>{new Date(booking.startTime).toLocaleTimeString()}</td>
                       <td>{new Date(booking.endTime).toLocaleTimeString()}</td>
+                      <td><Button className="text-white fw-bold w-100" variant="primary" onClick={() => {setDate(new Date(booking.date).toISOString().substring(0, 10))}}>Edit</Button></td>
                     </tr>
                     ))
                   )}

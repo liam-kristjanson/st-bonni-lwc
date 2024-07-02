@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import Navbar from "../components/Navbar"
 import useNavbar from '../components/hooks/useNavbar';
 
+import HeroGraphic from "../components/HeroGraphic.tsx";
+
 import Calendar from 'react-calendar';
 import "../components/styles/ReactCalendar.css"
 
@@ -11,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { Button, Modal } from 'react-bootstrap';
 
 import Icon from '@mdi/react';
-import { mdiCalendarBlankOutline } from '@mdi/js';
+import { mdiCalendar, mdiCalendarBlankOutline } from '@mdi/js';
 import { Booking } from '../types';
 
 type ValuePiece = Date | null;
@@ -39,29 +41,26 @@ export default function BookingAvail() {
         })
 
         .then(bookingData => {
-            let bookingDatesAvailable = bookingData.filter((bookingDate : Booking) => {
+            const bookingDatesAvailable = bookingData.filter((bookingDate : Booking) => {
                 return bookingDate.isAvailable;
             })
 
             bookingDatesAvailable.map((booking : Booking) => {
-                let validDate = (booking.date).substring(0, 10);
+                const validDate = (booking.date).substring(0, 10);
 
                 if (!availableDates.includes(validDate)) {
-                    availableDates.push(validDate);
+                    setAvailableDates(availableDates => [...availableDates, validDate])
                 }
             })
         })
-    }, []);
+    });
 
     function handleCalendarChange(value: Value) {
         if (!Array.isArray(value)) {
-            let dateData = new Date(value ?? "----");
-            let year = new Intl.DateTimeFormat('en', { year: "numeric" }).format(dateData);
-            let month = new Intl.DateTimeFormat('en', { month: "2-digit" }).format(dateData);
-            let day = new Intl.DateTimeFormat('en', { day: "2-digit" }).format(dateData);
-            let dateValue = (`${year}-${month}-${day}`);
-
-            let displayDate = new Intl.DateTimeFormat('en-US', {dateStyle: "full"}).format(dateData);
+            const dateData = new Date(value ?? "----");
+            
+            const dateValue = (`${new Intl.DateTimeFormat('en', { year: "numeric" }).format(dateData)}-${new Intl.DateTimeFormat('en', { month: "2-digit" }).format(dateData)}-${new Intl.DateTimeFormat('en', { day: "2-digit" }).format(dateData)}`);
+            const displayDate = new Intl.DateTimeFormat('en-US', {dateStyle: "full"}).format(dateData);
 
             setSelectedDate(value);
             setShowModal(true);
@@ -71,7 +70,7 @@ export default function BookingAvail() {
                 setAvailStatus("unavailable");
             } else {
                 setAvailStatus("available");
-            };
+            }
         }
     }
 
@@ -123,18 +122,14 @@ export default function BookingAvail() {
                         menuShowHandler={handleMenuShow}
                     />
             </div>
+
+            <HeroGraphic
+                        imageSource="/house-lawn-cropped-3.jpg"
+                        graphicText=" Booking Availability"
+                        iconPath={mdiCalendar}
+                    />
             
-            <div className="container-fluid" style={{"paddingBottom": "100px", "marginBottom": "200px", "backgroundImage": "url(/grassPatternGrey.png)", "backgroundSize": "100% auto", "backgroundRepeat": "repeat"}}>
-                <div style={{"paddingBottom": "40px"}}></div>
-                
-                <div className="row text-center">
-                    <div className="col">
-                        <h1 className="text-primary fw-bold">Booking Availability</h1>
-                    </div>
-                </div>
-
-                <div style={{"paddingBottom": "40px"}}></div>
-
+            <div className="container-fluid" style={{"paddingBottom": "100px"}}>
                 <div className="row">
                     <div className="col d-flex justify-content-center">
 
@@ -145,11 +140,11 @@ export default function BookingAvail() {
                             prev2Label={null}
 
                             tileClassName = {({date}) => {
-                                let dateData = new Date(date ?? "----");
-                                let year = new Intl.DateTimeFormat('en', { year: "numeric" }).format(dateData);
-                                let month = new Intl.DateTimeFormat('en', { month: "2-digit" }).format(dateData);
-                                let day = new Intl.DateTimeFormat('en', { day: "2-digit" }).format(dateData);
-                                let dateValue = (`${year}-${month}-${day}`);
+                                const dateData = new Date(date ?? "----");
+                                const year = new Intl.DateTimeFormat('en', { year: "numeric" }).format(dateData);
+                                const month = new Intl.DateTimeFormat('en', { month: "2-digit" }).format(dateData);
+                                const day = new Intl.DateTimeFormat('en', { day: "2-digit" }).format(dateData);
+                                const dateValue = (`${year}-${month}-${day}`);
 
                                 if (availableDates.includes(dateValue)) {
                                     return  'available'
