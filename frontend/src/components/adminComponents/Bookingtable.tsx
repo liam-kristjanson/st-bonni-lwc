@@ -8,15 +8,62 @@ import {
   Tab,
   Badge,
   Form,
+  Spinner,
 } from "react-bootstrap";
 
 import { Booking, Slot } from "../../types";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 interface SlotCardProps {
   slot: Slot;
 }
 
 const SlotCard = (props: SlotCardProps) => {
+  const user = useAuthContext().state.user;
+
+  const [reviewLink, setReviewLink] = useState<string | null>(null);
+  const [reviewId, setReviewId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  
+
+  function generateReviewLink(slot: Slot) {
+    setIsLoading(true);
+
+    const headers : HeadersInit = {
+      "content-type": "application/json",
+      "authorization": user?.token ?? "none"
+    }
+
+    const body = JSON.stringify({
+      customerName: slot.customerName ?? "Unknown",
+      customerEmail: slot.email ?? "Unknown",
+      customerPhone: slot.phoneNumber ?? "Unknown",
+      serviceDate: slot.startTime
+    });
+
+    fetch(import.meta.env.VITE_SERVER + "/admin/generate-review-link", {
+      headers: headers,
+      body: body,
+      method:"POST"
+    })
+    .then((response) => {
+      return response.json();
+    })
+    .then((responseData) => {
+      setIsLoading(false);
+
+      console.log(responseData)
+
+      setReviewLink(responseData.reviewLink);
+      setReviewId(responseData.reviewId);
+    })
+    .catch((error) => {
+      setIsLoading(false);
+      alert(error);
+      console.error(error);
+    })
+  }
+
   const startTime = new Date(props.slot.startTime).toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
@@ -56,9 +103,34 @@ const SlotCard = (props: SlotCardProps) => {
           </>
         )}
       </div>
-      <Button variant="outline-primary" size="sm">
-        Manage Slot
-      </Button>
+
+      {isLoading ? (
+        <Spinner variant="primary"/>
+      ) : (
+        reviewLink ? (
+          <a className="btn btn-warning text-white fw-bold" href={encodeURI(
+            "mailto:" + props.slot.email
+            + "?subject="
+            + "Thank you for using St. Bonni Lawn and Window Care"
+            + "&body="
+            + "Thank you for choosing to use St. Bonni Lawn and Window care for your property maintainence needs."
+            + "We hope our services have met or exceeded your expectations. We'd love to hear from you! Please take "
+            + " about 5 minutes to leave us a review using the following link:\n\n")
+            + encodeURIComponent(reviewLink)
+            + encodeURI("\n\n"
+            + "You can also leave a review on our website using the following review code: " + reviewId
+            + "\n\n"  
+            + "We look forward to hearing from you, and hope to service your beautiful property again sometime soon!"
+            + "\n\n"
+            + "Regards,\n"
+            + "Management Team,\n"
+            + "St. Bonni Lawn and Window Care"
+        )}>Send Review Link</a>
+        ) : (
+          !props.slot.isAvailable && <Button onClick={() => generateReviewLink(props.slot)}variant="primary text-white fw-bold">Generate Review Link</Button>
+        )
+      )}
+      
     </div>
   );
 };

@@ -65,6 +65,7 @@ app.get('/log-auth-token', (req, res) => {
 }) 
 
 app.post("/admin/availability", bookingController.handleUpdateAvailability);
+app.post("/admin/generate-review-link", bookingController.generateReviewLink);
 
 app.listen(PORT, () => {
   console.log("Backend server running at http://localhost:" + PORT);

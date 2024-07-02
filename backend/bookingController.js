@@ -2,6 +2,7 @@ const { start } = require('repl');
 const dateHelpers = require('./dateHelpers.js')
 const dbRetriever = require('./dbretriever.js')
 const helpers = require('./helpers.js');
+const { ObjectId } = require('mongodb');
 
 module.exports.handleUpdateAvailability = async(req, res) => {
     try{
@@ -101,4 +102,40 @@ function expandAvailabilitySlots(bookingsArr, originalEndTime, newEndTime) {
   }
 
   return bookingsArr;
+}
+
+module.exports.generateReviewLink = (req, res) => {
+
+  //validation
+  if (!req.body.customerName || !req.body.customerEmail || !req.body.serviceDate) {
+    return res.status(400).json({error: "Customer name, Customer email, and Service Date are required"});
+  }
+
+  const serviceDate = new Date(req.body.serviceDate);
+
+  if (isNaN(serviceDate)) {
+    return res.status(400).json({error: "Invalid date detected in serviceDate"});
+  }
+
+  const reviewObject = {
+    _id: new ObjectId(),
+    customerName: req.body.customerName,
+    customerEmail: req.body.customerEmail,
+    serviceDate: serviceDate,
+    isSubmitted: false
+  }
+
+  dbRetriever.insertOne('reviews', reviewObject)
+  .then((result) => {
+    if (result.acknowledged) {
+      const reviewLink = process.env.FRONT_ORIGIN + "?review=true&id=" + result.insertedId
+      return res.status(200).json({message: "Created new review link", reviewLink: reviewLink, reviewId: result.insertedId});
+    } else {
+      throw new Error("Review insertion was not acknowledged");
+    }
+  })
+  .catch((err) => {
+    console.error(err);
+    res.status(500).json({error: "Internal server error"});
+  })
 }
