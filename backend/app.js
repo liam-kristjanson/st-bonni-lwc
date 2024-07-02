@@ -16,7 +16,8 @@ const PORT = process.env.PORT || 8080;
 
 const corsOptions = {
   origin: process.env.FRONT_ORIGIN,
-  optionsSuccessStatus: 200,
+  optionsSuccessStatus: 204,
+  "methods": "GET,HEAD,PUT,PATCH,POST,DELETE"
 };
 
 const app = express();
@@ -53,65 +54,7 @@ app.get("/bookings", (req, res) => {
 
 
 //admin Dashboard 
-app.get("/bookingsfilter", async (req, res) => {
-    try {
-        const { filter, startDate, endDate } = req.query;
-        
-        let query = {};
-        let aggregationPipeline = [];
-
-        // Date filtering
-        if (filter === 'today') {
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            const tomorrow = new Date(today);
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            query.startTime = { $gte: today, $lt: tomorrow };
-        } else if (filter === 'dateRange' && startDate && endDate) {
-            query.startTime = { $gte: new Date(startDate), $lte: new Date(endDate) };
-        }
-
-        // Availability filtering
-        if (filter === 'available') {
-            query.isAvailable = true;
-            query['bookings.isAvailable'] = true;
-        } else if (filter === 'booked') {
-            query.$or = [{ isAvailable: false }, { 'bookings.isAvailable': false }];
-        }
-
-        // Base aggregation stages
-        aggregationPipeline = [
-            { $match: query },
-            { $sort: { startTime: 1 } }
-        ];
-
-        // Conditional $unwind and $group only if filtering on bookings
-        if (filter === 'available' || filter === 'booked') {
-            aggregationPipeline.splice(1, 0, 
-                { $unwind: "$bookings" },
-                { $match: query },  // Re-apply the filter after unwinding
-                { 
-                    $group: {
-                        _id: "$_id",
-                        date: { $first: "$date" },
-                        startTime: { $first: "$startTime" },
-                        endTime: { $first: "$endTime" },
-                        isAvailable: { $first: "$isAvailable" },
-                        bookings: { $push: "$bookings" }
-                    }
-                }
-            );
-        }
-
-        // Execute aggregation
-        const bookings = await dbRetriever.aggregateDocuments("bookings", aggregationPipeline);
-
-        res.json({ bookings });
-    } catch (error) {
-        console.error("Error fetching bookings:", error);
-        res.status(500).json({ message: 'Error fetching bookings', error: error.message });
-    }
-});
+app.get("/bookingsfilter", bookingController.getFilteredBookings);
 
 app.get('/log-auth-token', (req, res) => {
     let verifiedAuthToken = jwt.verify(req.headers.authorization, process.env.JWT_SECRET);
@@ -126,7 +69,10 @@ app.get('/log-auth-token', (req, res) => {
 }) 
 
 app.post("/admin/availability", bookingController.handleUpdateAvailability);
+app.post("/admin/generate-review-link", bookingController.generateReviewLink);
 
 app.listen(PORT, () => {
   console.log("Backend server running at http://localhost:" + PORT);
+  console.log("CORS configured to allow requests from " + process.env.FRONT_ORIGIN)
+  console.log("Specified timezone: ", process.env.TZ);
 });

@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-
+import { useState, useEffect, useCallback } from "react";
 import {
   Container,
   Row,
@@ -10,29 +9,23 @@ import {
   Badge,
   Form,
   Card,
+  Spinner,
 } from "react-bootstrap";
 
 import { Clock, User, Phone, Mail, Briefcase, Filter } from "lucide-react";
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
-interface Slot {
-  startTime: string;
-  endTime: string;
-  isAvailable: boolean;
-  customerName?: string;
-  phoneNumber?: string;
-  email?: string;
-  serviceType?: string;
-}
-
-interface DayData {
-  date: string;
-  bookings: Slot[];
-}
+import { useAuthContext } from "../../hooks/useAuthContext";
+import { DayData, Slot } from "../../types";
 
 const SlotCard = ({ slot }: { slot: Slot }) => {
+  const user = useAuthContext().state.user;
+
+  const [reviewLink, setReviewLink] = useState<string | null>(null);
+  const [reviewId, setReviewId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const startTime = new Date(slot.startTime).toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
@@ -42,6 +35,45 @@ const SlotCard = ({ slot }: { slot: Slot }) => {
     hour: "2-digit",
     minute: "2-digit",
   });
+
+  function generateReviewLink(slot: Slot) {
+    setIsLoading(true);
+
+    const headers : HeadersInit = {
+      "content-type": "application/json",
+      "authorization": user?.token ?? "none"
+    }
+
+    const body = JSON.stringify({
+      customerName: slot.customerName ?? "Unknown",
+      customerEmail: slot.email ?? "Unknown",
+      customerPhone: slot.phoneNumber ?? "Unknown",
+      serviceDate: slot.startTime
+    });
+
+    fetch(import.meta.env.VITE_SERVER + "/admin/generate-review-link", {
+      headers: headers,
+      body: body,
+      method:"POST"
+    })
+    .then((response) => {
+      return response.json();
+    })
+    .then((responseData) => {
+      setIsLoading(false);
+
+      console.log(responseData)
+
+      setReviewLink(responseData.reviewLink);
+      setReviewId(responseData.reviewId);
+    })
+    .catch((error) => {
+      setIsLoading(false);
+      alert(error);
+      console.error(error);
+    })
+  }
+    
 
   return (
     <Card className="mb-3" border={slot.isAvailable ? "success" : "warning"}>
@@ -97,7 +129,32 @@ const SlotCard = ({ slot }: { slot: Slot }) => {
 
           {/* Needs to have proper feature for admin to change the db fields */}
           <Col md={2} className="text-md-end">
-            <Button variant="outline-primary">Manage Slot</Button>
+            {isLoading ? (
+              <Spinner variant="primary"/>
+            ) : (
+              reviewLink ? (
+                <a className="btn btn-warning text-white fw-bold" href={encodeURI(
+                  "mailto:" + slot.email
+                  + "?subject="
+                  + "Thank you for using St. Bonni Lawn and Window Care"
+                  + "&body="
+                  + "Thank you for choosing to use St. Bonni Lawn and Window care for your property maintainence needs."
+                  + "We hope our services have met or exceeded your expectations. We'd love to hear from you! Please take "
+                  + " about 5 minutes to leave us a review using the following link:\n\n")
+                  + encodeURIComponent(reviewLink)
+                  + encodeURI("\n\n"
+                  + "You can also leave a review on our website using the following review code: " + reviewId
+                  + "\n\n"  
+                  + "We look forward to hearing from you, and hope to service your beautiful property again sometime soon!"
+                  + "\n\n"
+                  + "Regards,\n"
+                  + "Management Team,\n"
+                  + "St. Bonni Lawn and Window Care"
+              )}>Send Review Link</a>
+              ) : (
+                !slot.isAvailable && <Button onClick={() => generateReviewLink(slot)}variant="primary text-white fw-bold">Generate Review Link</Button>
+              )
+            )}
           </Col>
         </Row>
       </Card.Body>
@@ -113,11 +170,7 @@ const BookingTable = () => {
   const [endDate, setEndDate] = useState<Date>(new Date());
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  useEffect(() => {
-    fetchBookingData();
-  }, [filter, startDate, endDate]);
-
-  async function fetchBookingData() {
+  const fetchBookingData = useCallback(async () => {
     setIsLoading(true);
 
     const queryParams = new URLSearchParams({
@@ -142,7 +195,7 @@ const BookingTable = () => {
     } finally {
       setIsLoading(false);
     }
-  }
+  }, [startDate, endDate, filter, activeDate]);
 
   const handleFilterChange = (newFilter: string) => {
     setFilter(newFilter);
@@ -157,6 +210,10 @@ const BookingTable = () => {
       }
     }
   };
+
+  useEffect(() => {
+    fetchBookingData();
+  }, [filter, startDate, endDate, fetchBookingData]);
 
   return (
     <Container fluid className="p-3">

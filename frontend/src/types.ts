@@ -18,4 +18,20 @@ export interface Booking {
     startTime: string,
     endTime: string,
     isAvailable: boolean,
+    bookings: Slot[]
 }
+
+export interface Slot {
+    startTime: string;
+    endTime: string;
+    isAvailable: boolean;
+    customerName?: string;
+    phoneNumber?: string;
+    email?: string;
+    serviceType?: string;
+  }
+
+ export interface DayData {
+    date: string;
+    bookings: Slot[];
+  }

@@ -159,6 +159,7 @@ return(
                   <th>Date</th>
                   <th>Start Time</th>
                   <th>End Time</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
 
@@ -174,6 +175,7 @@ return(
                       <td>{new Date(booking.date).toLocaleDateString()}</td>
                       <td>{new Date(booking.startTime).toLocaleTimeString()}</td>
                       <td>{new Date(booking.endTime).toLocaleTimeString()}</td>
+                      <td><Button className="text-white fw-bold w-100" variant="primary" onClick={() => {setDate(new Date(booking.date).toISOString().substring(0, 10))}}>Edit</Button></td>
                     </tr>
                     ))
                   )}
