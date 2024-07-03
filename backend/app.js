@@ -88,6 +88,7 @@ app.get('/log-auth-token', (req, res) => {
 }) 
 
 app.post("/admin/availability", bookingController.handleUpdateAvailability);
+app.post("/admin/update-account-info", authController.updateAccountInfo);
 app.post("/book-slot", bookingController.bookSlot);
 app.post("/admin/generate-review-link", bookingController.generateReviewLink);
 

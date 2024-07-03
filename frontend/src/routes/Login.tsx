@@ -5,6 +5,7 @@ import Navbar from "../components/Navbar";
 import useNavbar from "../components/hooks/useNavbar";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../hooks/useAuthContext";
+import ResetPasswordModal from "../components/adminComponents/ResetPasswordModal";
 
 export default function Login() {
   const {showMenu, handleMenuShow, handleMenuHide} = useNavbar();
@@ -15,6 +16,7 @@ export default function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [showResetPasswordModal, setShowResetPasswordModal] = useState<boolean>(false);
     
   function handleEmailChange(newEmail: string) {
     setEmail(newEmail);
@@ -101,6 +103,7 @@ export default function Login() {
 
       <Container>
         <LoginCluster
+          handleModalShow={() => {setShowResetPasswordModal(true)}}
           emailChangeHandler={handleEmailChange}
           passwordChangeHandler={handlePasswordChange}
           submitHandler={handleSubmit}
@@ -109,6 +112,11 @@ export default function Login() {
           errorMessage={errorMessage}
         />
       </Container>
+
+      <ResetPasswordModal
+        show={showResetPasswordModal}
+        modalHideHandler={() => {setShowResetPasswordModal(false)}}
+      />
     </>
   );
 }

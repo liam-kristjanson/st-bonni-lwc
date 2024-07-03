@@ -1,6 +1,7 @@
 const dbRetriever = require('./dbretriever');
 const encrypt = require("./encrypt");
 const jwt = require("jsonwebtoken");
+const { ObjectId } = require("mongodb")
 
 module.exports.handleLogin = async (req, res) => {
     try {
@@ -131,4 +132,43 @@ module.exports.verifyAdmin = (req, res, next) => {
   }
 
   return res.status(401).json({error: "Unauthorized"})
+}
+
+module.exports.updateAccountInfo = async (req, res) => {
+  console.log("--- Update account info ---");
+
+  console.log("Request body");
+  console.log(req.body);
+
+  try {
+    //validation
+    if (!req.body.oldEmail || !req.body.newName) {
+      return res.status(400).json({error: "Bad Request"});
+    }
+
+    //find existing user record
+    const existingUserRecord = await dbRetriever.fetchOneDocument('users', {email: req.body.oldEmail});
+
+    //if existing record not found, return 404
+    if (!existingUserRecord) {
+      return res.status(404).json({error: "No user found with the given email"});
+    }
+
+    console.log("Matched record: ");
+    console.log(existingUserRecord);
+
+    const updateResult = await dbRetriever.updateOne('users', {_id: new ObjectId(existingUserRecord._id)}, {$set: {name: req.body.newName, email: req.body.newEmail}});
+
+    if (updateResult.acknowledged) {
+      console.log("Updated user record successfuly")
+      return res.status(200).json({message: "User record updated"});
+    } else {
+      console.log("An error occured while writing to the database\n --- Update Result ---");
+      console.log(updateResult);
+      return res.status(500).json({error: "An error occured while writing to the database"});
+    }
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({error: "An unexpected error occured"});
+  }
 }

@@ -13,6 +13,7 @@ import Schedule from "./routes/Schedule";
 import Reviews from "./routes/Reviews";
 
 import ProtectedRoute from "./components/ProtectedRoute";
+import MyAccount from "./routes/MyAccount";
 
 export const router = createBrowserRouter([
     {
@@ -64,6 +65,13 @@ export const router = createBrowserRouter([
     {
         path:"/reviews",
         element:<Reviews/>
+    },
+    {
+        path: "/admin/my-account",
+        element:
+        <ProtectedRoute validRoles={['admin']}>
+            <MyAccount/>
+        </ProtectedRoute>
     }
 
 ])

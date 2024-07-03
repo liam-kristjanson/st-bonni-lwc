@@ -32,7 +32,7 @@ export default function AdminNavbar(props: NavbarProps) {
             "buttonClasses": "mb-5 text-white",
         },
         {
-            "route": "/admin/account",
+            "route": "/admin/my-account",
             "text": "My Account",
             "buttonVariant": "warning"
         }
@@ -46,7 +46,7 @@ export default function AdminNavbar(props: NavbarProps) {
             <div className="fixed-top bg-white">
                 <div className="row">
                     <div className="col">
-                        <nav className="d-flex justify-content-between align-items-center w-100 border-bottom border-dark p-3">
+                        <nav className="d-flex justify-content-between align-items-center w-100 shadow p-3">
                             <h3 onClick={() => navigate('/admin/dashboard')} className="link-primary pe-auto" role="button"><Icon path={mdiGrass} size={1.3}/> St Bonni Admin</h3>
 
                             <div id="nav-links-md" className="d-none d-md-flex gap-2 justify-content-around">

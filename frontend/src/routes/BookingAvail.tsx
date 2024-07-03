@@ -61,7 +61,10 @@ export default function BookingAvail() {
             const dateValue = (`${new Intl.DateTimeFormat('en', { year: "numeric" }).format(date)}-${new Intl.DateTimeFormat('en', { month: "2-digit" }).format(date)}-${new Intl.DateTimeFormat('en', { day: "2-digit" }).format(date)}`);
             const displayDate = new Intl.DateTimeFormat('en-US', {dateStyle: "full"}).format(date);
 
-            setSelectedDate(value);
+            
+            const newSelectedDate = new Date(date.setUTCHours(5, 0, 0, 0));
+
+            setSelectedDate(newSelectedDate);
             setShowModal(true);
             setModalText(displayDate);
 
@@ -119,7 +122,7 @@ export default function BookingAvail() {
             </Container>
 
             <HeroGraphic
-                        imageSource="/house-lawn-cropped-3.jpg"
+                        imageSource="/house-lawn-cropped-4.jpg"
                         graphicText=" Booking Availability"
                         iconPath={mdiCalendar}
                     />
