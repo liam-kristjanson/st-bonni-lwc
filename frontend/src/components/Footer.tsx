@@ -33,7 +33,7 @@ return(
                     <div>
                         <h5 className=" justify-content-center fw-bolder align-items-center  ">Social Media</h5>
                         <ul className=" link-underline-opacity-75-hover text-sm-end" style={myStyle}>
-                            <li><a href=" https://www.instagram.com/ "><Icon path={mdiInstagram} size={1.5} className=" d-none d-md-inline  "  /><Icon path={mdiInstagram} size={1} className=" d-md-none " /> </a> Instagram </li>
+                            <li><Icon path={mdiInstagram} size={1.5} className=" d-none d-md-inline  "  /><Icon path={mdiInstagram} size={1} className=" d-md-none " /> Instagram </li>
                             <li><Icon path={mdiFacebook} size={1.5} className=" d-none d-md-inline" /><Icon path={mdiFacebook} size={1}  className=" d-md-none " /> Facebook</li>
                             <li><Icon path={mdiLinkedin} size={1.5} className=" d-none d-md-inline" /><Icon path={mdiLinkedin} size={1} className=" d-md-none "  />Instagram</li>
                         </ul>
