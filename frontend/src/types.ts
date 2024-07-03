@@ -28,7 +28,6 @@ export interface Appointment {
     email: string,
     serviceType: string,
     bookingTime: Date,
-    duration: number,
     isCompleted: boolean,
 }
 
@@ -40,6 +39,7 @@ export interface Slot {
     phoneNumber?: string;
     email?: string;
     serviceType?: string;
+    address?: string;
   }
 
  export interface DayData {

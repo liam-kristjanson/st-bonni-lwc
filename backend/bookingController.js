@@ -100,11 +100,11 @@ module.exports.bookSlot = async (req, res) => {
         console.log(dayRecord.bookings[i]);
 
         dayRecord.bookings[i].isAvailable = false;
-        dayRecord.bookings[i].name = req.body.name;
+        dayRecord.bookings[i].customerName = req.body.name;
         dayRecord.bookings[i].email = req.body.email;
-        dayRecord.bookings[i].phone = req.body.phone;
+        dayRecord.bookings[i].phoneNumber = req.body.phone;
         dayRecord.bookings[i].address = req.body.address;
-        dayRecord.bookings[i].serviceOption = req.body.serviceOption;
+        dayRecord.bookings[i].serviceType = req.body.serviceOption;
         
 
         console.log("Modified record");

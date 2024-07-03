@@ -84,7 +84,7 @@ export default function TimeAvail() {
         .then(dateData => {
             setTimeslots(dateData.bookings);
         })
-    }, []);
+    }, [date]);
 
     return (
         <>

@@ -12,7 +12,7 @@ import {
   Spinner,
 } from "react-bootstrap";
 
-import { Clock, User, Phone, Mail, Briefcase, Filter } from "lucide-react";
+import { Clock, User, Phone, Mail, Filter, House } from "lucide-react";
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -105,8 +105,8 @@ const SlotCard = ({ slot }: { slot: Slot }) => {
                     <span>{slot.email || "N/A"}</span>
                   </div>
                   <div className="d-flex align-items-center mt-2">
-                    <Briefcase size={18} className="me-2 text-muted" />
-                    <span>{slot.serviceType || "N/A"}</span>
+                    <House size={18} className="me-2 text-muted" />
+                    <span>{slot.address || "N/A"}</span>
                   </div>
                 </Col>
               </Row>

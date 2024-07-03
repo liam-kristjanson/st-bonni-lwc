@@ -102,8 +102,8 @@ module.exports.jwtParser = (req, res, next) => {
     const claimToken = req.headers.authorization
     let verifiedAuthData;
 
-    console.log('claim token')
-    console.log(claimToken);
+    //console.log('claim token')
+    //console.log(claimToken);
 
     try {
       if (claimToken && claimToken != "none") {
@@ -116,8 +116,8 @@ module.exports.jwtParser = (req, res, next) => {
       verifiedAuthData = null;
     } 
 
-    console.log("Verified auth data");
-    console.log(verifiedAuthData);
+    //console.log("Verified auth data");
+    //console.log(verifiedAuthData);
 
     req.authData = verifiedAuthData;
 
