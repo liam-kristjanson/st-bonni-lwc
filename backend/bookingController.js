@@ -2,6 +2,7 @@ const { start } = require('repl');
 const dateHelpers = require('./dateHelpers.js')
 const dbRetriever = require('./dbretriever.js')
 const helpers = require('./helpers.js');
+const { ObjectId } = require('mongodb');
 
 module.exports.handleUpdateAvailability = async(req, res) => {
     try{
@@ -32,10 +33,12 @@ module.exports.handleUpdateAvailability = async(req, res) => {
       //check if availability record exists on selected date
       let currentAvailability = await dbRetriever.fetchOneDocument('bookings', {date: selectedDate});
   
-      if(currentAvailability){
+      if(currentAvailability) {
         console.log("Found existing availability for " + req.body.date + " updating...")
-  
-        const result = await dbRetriever.updateOne('bookings', {date: selectedDate}, {$set: {'date': selectedDate, 'startTime': startTimeDate, 'endTime': endTimeDate}})
+
+        const newAvailabilitySlots = expandAvailabilitySlots(currentAvailability.bookings, currentAvailability.endTime, endTimeDate)
+        
+        const result = await dbRetriever.updateOne('bookings', {date: selectedDate}, {$set: {'date': selectedDate, 'startTime': startTimeDate, 'endTime': endTimeDate, 'bookings': newAvailabilitySlots}})
   
         console.log("Upserted record")
         console.log(result.upsertedCount)
@@ -45,7 +48,7 @@ module.exports.handleUpdateAvailability = async(req, res) => {
         } else {
           res.status(500).json({error: "Error updating availability to database"})
         }
-      }else{
+      } else {
         console.log("No availability found for " + req.body.date + " creating new...");
         let newAvailability = {
           date: selectedDate,
@@ -63,13 +66,10 @@ module.exports.handleUpdateAvailability = async(req, res) => {
           res.status(500).json({error: "Error inserting availability in database"});
         }
       }
-  
     }catch (err) {
       console.error("booking failed:", err);
       res.status(500).json({ error: "An error occurred while trying to book" });
-  
     }    
-  
 }
 
 function generateBookings(startTime, endTime) {
@@ -120,7 +120,122 @@ module.exports.bookSlot = async (req, res) => {
 
     return res.status(500).json({error: "Error occured while writing to database"})
   }
+  
+  return res.status(400).json({error: "Failed to fetch day record"})
+};
 
+function expandAvailabilitySlots(bookingsArr, originalEndTime, newEndTime) {
+  let newTimeslots = helpers.generateHourlyTimeslots(originalEndTime, newEndTime);
 
-  return res.status(400).json({error: "Failed to fetch day record"});
+  for (let i = 1; i<newTimeslots.length-1; i++) {
+    bookingsArr.push({
+      startTime: new Date(newTimeslots[i]),
+      endTime: new Date(newTimeslots[i + 1]),
+      isAvailable: true
+    })
+  }
+
+  return bookingsArr;
+}
+
+module.exports.generateReviewLink = (req, res) => {
+
+  //validation
+  if (!req.body.customerName || !req.body.customerEmail || !req.body.serviceDate) {
+    return res.status(400).json({error: "Customer name, Customer email, and Service Date are required"});
+  }
+
+  const serviceDate = new Date(req.body.serviceDate);
+
+  if (isNaN(serviceDate)) {
+    return res.status(400).json({error: "Invalid date detected in serviceDate"});
+  }
+
+  const reviewObject = {
+    _id: new ObjectId(),
+    customerName: req.body.customerName,
+    customerEmail: req.body.customerEmail,
+    serviceDate: serviceDate,
+    isSubmitted: false
+  }
+
+  dbRetriever.insertOne('reviews', reviewObject)
+  .then((result) => {
+    if (result.acknowledged) {
+      const reviewLink = process.env.FRONT_ORIGIN + "?review=true&id=" + result.insertedId
+      return res.status(200).json({message: "Created new review link", reviewLink: reviewLink, reviewId: result.insertedId});
+    } else {
+      throw new Error("Review insertion was not acknowledged");
+    }
+  })
+  .catch((err) => {
+    console.error(err);
+    res.status(500).json({error: "Internal server error"});
+  })
+}
+
+module.exports.getFilteredBookings = async (req, res) => {
+  try {
+    const { filter, startDate, endDate } = req.query;
+    
+    let query = {};
+    let aggregationPipeline = [];
+
+    // Date filtering
+    if (filter === 'today') {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        query.startTime = { $gte: today, $lt: tomorrow };
+    } else if (filter === 'dateRange' && startDate && endDate) {
+        const startDateTime = new Date(startDate);
+        const endDateTime = new Date(endDate);
+
+        startDateTime.setHours(0, 0, 0, 0);
+        endDateTime.setHours(23, 59, 59, 999);
+
+        query.startTime = { $gte: new Date(startDateTime), $lte: new Date(endDateTime) };
+    }
+
+    // Availability filtering
+    if (filter === 'available') {
+        query.isAvailable = true;
+        query['bookings.isAvailable'] = true;
+    } else if (filter === 'booked') {
+        query.$or = [{ isAvailable: false }, { 'bookings.isAvailable': false }];
+    }
+
+    // Base aggregation stages
+    aggregationPipeline = [
+        { $match: query },
+        { $sort: { startTime: 1 } }
+    ];
+
+    // Conditional $unwind and $group only if filtering on bookings
+    if (filter === 'available' || filter === 'booked') {
+        aggregationPipeline.splice(1, 0, 
+            { $unwind: "$bookings" },
+            { $match: query },  // Re-apply the filter after unwinding
+            { 
+                $group: {
+                    _id: "$_id",
+                    date: { $first: "$date" },
+                    startTime: { $first: "$startTime" },
+                    endTime: { $first: "$endTime" },
+                    isAvailable: { $first: "$isAvailable" },
+                    bookings: { $push: "$bookings" }
+                }
+            }
+        );
+    }
+
+    // Execute aggregation
+    const bookings = await dbRetriever.aggregateDocuments("bookings", aggregationPipeline);
+
+    res.json({ bookings });
+  } catch (error) {
+      console.error("Error fetching bookings:", error);
+      res.status(500).json({ message: 'Error fetching bookings', error: error.message });
+  }
 }

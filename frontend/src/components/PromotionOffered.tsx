@@ -18,8 +18,8 @@ const PromotionOffered = (props: PromotionOfferedProps) => {
   return (
     <div className="container border rounded shadow-lg p-4 my-4 text-center">
       <div className="badge bg-primary text-uppercase mb-3">Most Popular</div>
-      <div >
-        <div className="col-md-8 mx-auto">
+      <div>
+        <div className="col-md-8  mx-auto">
           <h3 className="text-success fw-bold">{props.mainHeading}</h3>
 
           <div className="mb-4">

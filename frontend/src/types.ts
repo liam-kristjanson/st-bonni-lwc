@@ -17,8 +17,8 @@ export interface Booking {
     date: string,
     startTime: Date,
     endTime: Date,
-    bookings: Appointment[],
     isAvailable: boolean,
+    bookings: Slot[]
 }
 
 export interface Appointment {
@@ -31,3 +31,18 @@ export interface Appointment {
     duration: number,
     isCompleted: boolean,
 }
+
+export interface Slot {
+    startTime: string;
+    endTime: string;
+    isAvailable: boolean;
+    customerName?: string;
+    phoneNumber?: string;
+    email?: string;
+    serviceType?: string;
+  }
+
+ export interface DayData {
+    date: string;
+    bookings: Slot[];
+  }

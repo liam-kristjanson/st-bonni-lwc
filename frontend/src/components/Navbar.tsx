@@ -15,8 +15,8 @@ export default function Navbar(props: NavbarProps) {
 
     const links : NavLink[] = [
         {
-            "route": "/lawn-services",
-            "text": "Lawn Services",
+            "route": "/reviews",
+            "text": "Leave a Review",
             "buttonClasses": "text-white"
         },
         {
