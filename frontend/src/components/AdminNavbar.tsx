@@ -71,7 +71,7 @@ export default function AdminNavbar(props: NavbarProps) {
             </div>
 
             {/* Artificially move the rest of the content down   */}
-            <div style={{marginBottom: "90px", backgroundColor:"white"}}>
+            <div style={{marginBottom: "70px", backgroundColor:"white"}}>
 
             </div>
 

@@ -67,7 +67,7 @@ export default function Navbar(props: NavbarProps) {
         </div>
 
         {/* Artificially move the rest of the content down   */}
-        <div style={{marginBottom: "75px", backgroundColor:"white"}}>
+        <div style={{marginBottom: "70px", backgroundColor:"white"}}>
 
         </div>
 
