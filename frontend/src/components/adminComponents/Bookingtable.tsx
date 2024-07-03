@@ -39,41 +39,40 @@ const SlotCard = ({ slot }: { slot: Slot }) => {
   function generateReviewLink(slot: Slot) {
     setIsLoading(true);
 
-    const headers : HeadersInit = {
+    const headers: HeadersInit = {
       "content-type": "application/json",
-      "authorization": user?.token ?? "none"
-    }
+      authorization: user?.token ?? "none",
+    };
 
     const body = JSON.stringify({
       customerName: slot.customerName ?? "Unknown",
       customerEmail: slot.email ?? "Unknown",
       customerPhone: slot.phoneNumber ?? "Unknown",
-      serviceDate: slot.startTime
+      serviceDate: slot.startTime,
     });
 
     fetch(import.meta.env.VITE_SERVER + "/admin/generate-review-link", {
       headers: headers,
       body: body,
-      method:"POST"
+      method: "POST",
     })
-    .then((response) => {
-      return response.json();
-    })
-    .then((responseData) => {
-      setIsLoading(false);
+      .then((response) => {
+        return response.json();
+      })
+      .then((responseData) => {
+        setIsLoading(false);
 
-      console.log(responseData)
+        console.log(responseData);
 
-      setReviewLink(responseData.reviewLink);
-      setReviewId(responseData.reviewId);
-    })
-    .catch((error) => {
-      setIsLoading(false);
-      alert(error);
-      console.error(error);
-    })
+        setReviewLink(responseData.reviewLink);
+        setReviewId(responseData.reviewId);
+      })
+      .catch((error) => {
+        setIsLoading(false);
+        alert(error);
+        console.error(error);
+      });
   }
-    
 
   return (
     <Card className="mb-3" border={slot.isAvailable ? "success" : "warning"}>
@@ -130,29 +129,45 @@ const SlotCard = ({ slot }: { slot: Slot }) => {
           {/* Needs to have proper feature for admin to change the db fields */}
           <Col md={2} className="text-md-end">
             {isLoading ? (
-              <Spinner variant="primary"/>
+              <Spinner variant="primary" />
+            ) : reviewLink ? (
+              <a
+                className="btn btn-warning text-white fw-bold"
+                href={
+                  encodeURI(
+                    "mailto:" +
+                      slot.email +
+                      "?subject=" +
+                      "Thank you for using St. Bonni Lawn and Window Care" +
+                      "&body=" +
+                      "Thank you for choosing to use St. Bonni Lawn and Window care for your property maintainence needs." +
+                      "We hope our services have met or exceeded your expectations. We'd love to hear from you! Please take " +
+                      " about 5 minutes to leave us a review using the following link:\n\n"
+                  ) +
+                  encodeURIComponent(reviewLink) +
+                  encodeURI(
+                    "\n\n" +
+                      "You can also leave a review on our website using the following review code: " +
+                      reviewId +
+                      "\n\n" +
+                      "We look forward to hearing from you, and hope to service your beautiful property again sometime soon!" +
+                      "\n\n" +
+                      "Regards,\n" +
+                      "Management Team,\n" +
+                      "St. Bonni Lawn and Window Care"
+                  )
+                }
+              >
+                Send Review Link
+              </a>
             ) : (
-              reviewLink ? (
-                <a className="btn btn-warning text-white fw-bold" href={encodeURI(
-                  "mailto:" + slot.email
-                  + "?subject="
-                  + "Thank you for using St. Bonni Lawn and Window Care"
-                  + "&body="
-                  + "Thank you for choosing to use St. Bonni Lawn and Window care for your property maintainence needs."
-                  + "We hope our services have met or exceeded your expectations. We'd love to hear from you! Please take "
-                  + " about 5 minutes to leave us a review using the following link:\n\n")
-                  + encodeURIComponent(reviewLink)
-                  + encodeURI("\n\n"
-                  + "You can also leave a review on our website using the following review code: " + reviewId
-                  + "\n\n"  
-                  + "We look forward to hearing from you, and hope to service your beautiful property again sometime soon!"
-                  + "\n\n"
-                  + "Regards,\n"
-                  + "Management Team,\n"
-                  + "St. Bonni Lawn and Window Care"
-              )}>Send Review Link</a>
-              ) : (
-                !slot.isAvailable && <Button onClick={() => generateReviewLink(slot)}variant="primary text-white fw-bold">Generate Review Link</Button>
+              !slot.isAvailable && (
+                <Button
+                  onClick={() => generateReviewLink(slot)}
+                  variant="primary text-white fw-bold"
+                >
+                  Generate Review Link
+                </Button>
               )
             )}
           </Col>
@@ -216,7 +231,7 @@ const BookingTable = () => {
   }, [filter, startDate, endDate, fetchBookingData]);
 
   return (
-    <Container fluid className="p-3">
+    <Container fluid className="p-3 bg-white min-vh-100">
       <h1 className="mb-4 text-center">Booking Slots</h1>
       <Row className="mb-3">
         <Col md={12} className="mb-2">
@@ -262,7 +277,11 @@ const BookingTable = () => {
       </Row>
 
       {isLoading ? (
-        <div className="text-center">Loading...</div>
+        <Spinner variant="primary" />
+      ) : bookingData.length === 0 ? (
+        <div className="text-center">
+          <h3>No available bookings</h3>
+        </div>
       ) : (
         <>
           <Tabs
