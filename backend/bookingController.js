@@ -91,8 +91,36 @@ function generateBookings(startTime, endTime) {
 }
 
 module.exports.bookSlot = async (req, res) => {
+  let dayRecord = await dbRetriever.fetchOneDocument('bookings', {date: new Date(req.body.selectedDate)});
+  console.log(req.body);
+  if (dayRecord) {
+    for (let i = 0; i < dayRecord.bookings.length; i++) {
+      if (new Date(dayRecord.bookings[i].startTime).getTime() === new Date(req.body.selectedTime).getTime())  {
+        console.log("Matched record:");
+        console.log(dayRecord.bookings[i]);
 
-  let dayRecord = await dbRetriever.fetchOneDocument('bookings', {date: new Date(req.body.selectedDate)})
+        dayRecord.bookings[i].isAvailable = false;
+        dayRecord.bookings[i].name = req.body.name;
+        dayRecord.bookings[i].email = req.body.email;
+        dayRecord.bookings[i].phone = req.body.phone;
+        dayRecord.bookings[i].address = req.body.address;
+        dayRecord.bookings[i].serviceOption = req.body.serviceOption;
+        
 
-  res.status(200).json(dayRecord);
+        console.log("Modified record");
+        console.log(dayRecord.bookings[i]);
+      }
+    }
+
+    const result = await dbRetriever.updateOne('bookings', {date: new Date(req.body.selectedDate)}, {$set: {bookings: dayRecord.bookings}})
+
+    if (result.acknowledged) {
+      return res.status(200).json({message: "Request Sent"})
+    }
+
+    return res.status(500).json({error: "Error occured while writing to database"})
+  }
+
+
+  return res.status(400).json({error: "Failed to fetch day record"});
 }

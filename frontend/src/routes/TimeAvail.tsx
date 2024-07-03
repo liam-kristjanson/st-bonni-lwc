@@ -5,10 +5,7 @@ import useNavbar from '../components/hooks/useNavbar';
 
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Appointment, Booking } from "../types";
-
-type ValuePiece = Date | null;
-type Value = ValuePiece | [ValuePiece, ValuePiece];
+import { Booking } from "../types";
 
 export default function TimeAvail() {
     const {showMenu, handleMenuShow, handleMenuHide} = useNavbar();
@@ -21,6 +18,9 @@ export default function TimeAvail() {
     const [serviceOption, setServiceOption] = useState<string>("");
     const [timeslots, setTimeslots] = useState<Booking[]>([]);
     const [selectedTime, setSelectedTime] = useState<string>("");
+
+    const [serverMessage, setServerMessage] = useState<string>('');
+    const [serverMessageType, setServerMessageType] = useState<'success' | 'danger'>('success');
 
     const { state } = useLocation();
     const { date } = state;
@@ -49,7 +49,7 @@ export default function TimeAvail() {
             "content-type": "application/json"
         }
 
-        console.log(requestBody);
+        //console.log(requestBody);
 
         fetch(import.meta.env.VITE_SERVER + "/book-slot", {
             method: "POST",
@@ -57,13 +57,21 @@ export default function TimeAvail() {
             body: JSON.stringify(requestBody)
         })
         .then(response => {
+            console.log("Response Okay: " + response.ok);
+
+            if (response.ok) {
+                setServerMessageType('success');
+            } else {
+                setServerMessageType('danger');
+            }
+
             return response.json()
         })
         .then(responseData => {
-            console.log(responseData);
+            setServerMessage(responseData.message ?? responseData.error);
         })
         .catch(err => {
-            console.error(err);
+            console.error("Error fetching data: " + err);
         })
     }
 
@@ -74,7 +82,6 @@ export default function TimeAvail() {
             return dateResponse.json()
         })
         .then(dateData => {
-            console.log(dateData);
             setTimeslots(dateData.bookings);
         })
     }, []);
@@ -119,7 +126,11 @@ export default function TimeAvail() {
                         </Form.Group>
 
                         <Form.Group className="mb-3 text-center">
-                            <Button className="btn-sm w-50 fw-bold text-white" type="submit" variant="primary">Submit</Button>
+                            {serverMessage ? (
+                                <Button className="btn-sm w-50 fw-bold text-white" type="submit" variant={serverMessageType} disabled>{serverMessage}</Button>
+                            ) : (
+                                <Button className="btn-sm w-50 fw-bold text-white" type="submit" variant="primary">Submit</Button>
+                            )}
                         </Form.Group>
                     </Form>
                 </Modal.Body>
