@@ -92,7 +92,7 @@ export default function MyAccount() {
             </Container>
 
             <Container>
-                <Row className="d-flex justify-content-center">
+                <Row className="d-flex justify-content-center min-vh-100">
                     <Col lg={8}>
                         <h1 className="text-primary mb-4">My Account</h1>
 

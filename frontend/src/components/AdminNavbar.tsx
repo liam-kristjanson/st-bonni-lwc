@@ -17,7 +17,7 @@ export default function AdminNavbar(props: NavbarProps) {
 
     const links : NavLink[] = [
         {
-            "route": "/admin/bookings",
+            "route": "/admin/dashboard",
             "text": "Bookings",
             "buttonClasses": "text-white"
         },
@@ -71,7 +71,7 @@ export default function AdminNavbar(props: NavbarProps) {
             </div>
 
             {/* Artificially move the rest of the content down   */}
-            <div style={{marginBottom: "90px"}}>
+            <div style={{marginBottom: "90px", backgroundColor:"white"}}>
 
             </div>
 
