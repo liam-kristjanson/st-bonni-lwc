@@ -15,8 +15,8 @@ export interface NavLink {
 
 export interface Booking {
     date: string,
-    startTime: string,
-    endTime: string,
+    startTime: Date,
+    endTime: Date,
     isAvailable: boolean,
     bookings: Slot[]
 }
@@ -31,6 +31,16 @@ export interface Review {
     submittedDate: string
 }
 
+export interface Appointment {
+    customerName: string,
+    phoneNumber: string,
+    address: string,
+    email: string,
+    serviceType: string,
+    bookingTime: Date,
+    isCompleted: boolean,
+}
+
 export interface Slot {
     startTime: string;
     endTime: string;
@@ -39,10 +49,10 @@ export interface Slot {
     phoneNumber?: string;
     email?: string;
     serviceType?: string;
+    address?: string;
   }
 
  export interface DayData {
     date: string;
     bookings: Slot[];
   }
-

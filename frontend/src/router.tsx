@@ -4,6 +4,7 @@ import Home from "./routes/Home";
 import AboutUs from "./routes/AboutUs";
 import BookingAvail from "./routes/BookingAvail";
 import TimeAvail from "./routes/TimeAvail";
+import Confirmation from "./routes/Confirmation";
 import Serves from "./routes/Serves";
 import Contact from "./routes/Contact";
 import AdminBook from "./routes/AdminBook";
@@ -14,6 +15,7 @@ import Reviews from "./routes/Reviews";
 import AdminReview from "./routes/AdminReview";
 
 import ProtectedRoute from "./components/ProtectedRoute";
+import MyAccount from "./routes/MyAccount";
 
 
 export const router = createBrowserRouter([
@@ -32,6 +34,10 @@ export const router = createBrowserRouter([
     {
         path: "/time-availability",
         element: <TimeAvail/>
+    },
+    {
+        path: "/confirmation",
+        element: <Confirmation/>
     },
     {
         path: "/lawn-services",
@@ -69,7 +75,17 @@ export const router = createBrowserRouter([
     },
     {
         path:"/admin/reviews",
-        element:<AdminReview/>
+        element:
+        <ProtectedRoute validRoles={['admin']}>
+            <AdminReview/>
+        </ProtectedRoute>
+    },
+    {
+        path: "/admin/my-account",
+        element:
+        <ProtectedRoute validRoles={['admin']}>
+            <MyAccount/>
+        </ProtectedRoute>
     }
 
 ])

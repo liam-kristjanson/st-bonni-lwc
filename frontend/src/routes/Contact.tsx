@@ -51,21 +51,21 @@ export default function Contact() {
                 </div>
 
                 <div className="row justify-content-center mb-5">
-                    <div className="col-2">
+                    <div className="col-4 col-md-3 col-lg-2">
                         <a className="link-primary d-flex align-items-center flex-column" href="#">
                             <Icon path={mdiInstagram} size={2}/>
                             <div className="text-align-center">Instagram</div>
                         </a>
                     </div>
 
-                    <div className="col-2 d-flex align-items-center flex-column">
+                    <div className="col-4 col-md-3 col-lg-2 d-flex align-items-center flex-column">
                         <a className="link-primary d-flex align-items-center flex-column" href="#">
                             <Icon path={mdiFacebook} size={2}/>
                             <div className="text-align-center">Facebook</div>
                         </a>
                     </div>
 
-                    <div className="col-2 d-flex align-items-center flex-column">
+                    <div className="col-4 col-md-3 col-lg-2 d-flex align-items-center flex-column">
                         <a className="link-primary d-flex align-items-center flex-column" href="#">
                             <Icon path={mdiTwitter} size={2}/>
                             <div className="text-align-center">Twitter</div>

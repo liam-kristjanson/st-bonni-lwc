@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface PromotionOfferedProps {
   mainHeading: string;
@@ -7,6 +8,7 @@ interface PromotionOfferedProps {
   promotionSubscription: string;
   secondaryHeading: string;
   discountPercentage:number;
+  isMostPopular?: boolean;
 }
 
 const PromotionOffered = (props: PromotionOfferedProps) => {
@@ -14,10 +16,11 @@ const PromotionOffered = (props: PromotionOfferedProps) => {
   const discountPercentage = props.discountPercentage / 100;
   const originalPrice = parseFloat(props.price.replace("$", ""));
   const discountedPrice = originalPrice * (1 - discountPercentage);
+  const navigate = useNavigate();
 
   return (
     <div className="container border rounded shadow-lg p-4 my-4 text-center">
-      <div className="badge bg-primary text-uppercase mb-3">Most Popular</div>
+      {props.isMostPopular && <div className="badge bg-primary text-uppercase mb-3">Most Popular</div>}
       <div>
         <div className="col-md-8  mx-auto">
           <h3 className="text-success fw-bold">{props.mainHeading}</h3>
@@ -50,7 +53,7 @@ const PromotionOffered = (props: PromotionOfferedProps) => {
           <p className="mb-4">{props.promotionSubscription}</p>
           <div className="d-grid gap-2 d-md-flex justify-content-md-center">
             <button className="btn btn-primary btn-md">Make Offer</button>
-            <button className="btn btn-outline-primary btn-md">Book Now</button>
+            <button onClick={() => {navigate('/booking-availability')}}className="btn btn-outline-primary btn-md">Book Now</button>
           </div>
         </div>
       </div>

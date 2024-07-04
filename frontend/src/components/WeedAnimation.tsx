@@ -6,10 +6,12 @@ import { useMediaQuery } from "react-responsive";
 import { useEffect } from "react";
 AOS.init();
 import { Container, Row, Col } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 const WeedAnimation = () => {
   const isAbove983px = useMediaQuery({ minWidth: 983 });
   const isAbove550px = useMediaQuery({ minWidth: 300 });
+  const navigate = useNavigate();
 
   useEffect(() => {
     setTimeout(() => {
@@ -127,6 +129,7 @@ const WeedAnimation = () => {
               size="lg"
               className="px-4 py-2 bg-success fw-bold text-white"
               style={{ zIndex: 10 }}
+              onClick={() => {navigate('/booking-availability')}}
             >
               REQUEST A SERVICE CALL
             </Button>

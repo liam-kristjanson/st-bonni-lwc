@@ -10,7 +10,7 @@ import "../components/styles/ReactCalendar.css"
 
 import { useNavigate } from "react-router-dom";
 
-import { Button, Modal } from 'react-bootstrap';
+import { Button, Col, Container, Modal, Row, Spinner } from 'react-bootstrap';
 
 import Icon from '@mdi/react';
 import { mdiCalendar, mdiCalendarBlankOutline } from '@mdi/js';
@@ -32,11 +32,13 @@ export default function BookingAvail() {
     const [availStatus, setAvailStatus] = useState<string>("unavailable");
     const [availableDates, setAvailableDates] = useState<string[]>([]);
 
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+
     useEffect(() => {
         fetch(import.meta.env.VITE_SERVER + "/bookings")
 
         .then(bookingResponse => {
-            console.log(bookingResponse.statusText);
+            setIsLoading(false);
             return bookingResponse.json();
         })
 
@@ -57,12 +59,15 @@ export default function BookingAvail() {
 
     function handleCalendarChange(value: Value) {
         if (!Array.isArray(value)) {
-            const dateData = new Date(value ?? "----");
+            const date = new Date(value ?? "----");
             
-            const dateValue = (`${new Intl.DateTimeFormat('en', { year: "numeric" }).format(dateData)}-${new Intl.DateTimeFormat('en', { month: "2-digit" }).format(dateData)}-${new Intl.DateTimeFormat('en', { day: "2-digit" }).format(dateData)}`);
-            const displayDate = new Intl.DateTimeFormat('en-US', {dateStyle: "full"}).format(dateData);
+            const dateValue = (`${new Intl.DateTimeFormat('en', { year: "numeric" }).format(date)}-${new Intl.DateTimeFormat('en', { month: "2-digit" }).format(date)}-${new Intl.DateTimeFormat('en', { day: "2-digit" }).format(date)}`);
+            const displayDate = new Intl.DateTimeFormat('en-US', {dateStyle: "full"}).format(date);
 
-            setSelectedDate(value);
+            
+            const newSelectedDate = new Date(date.setUTCHours(5, 0, 0, 0));
+
+            setSelectedDate(newSelectedDate);
             setShowModal(true);
             setModalText(displayDate);
 
@@ -74,13 +79,9 @@ export default function BookingAvail() {
         }
     }
 
-    function handleModalHide(){
-        setShowModal(false);
-    }
-
     return (
         <>
-            <Modal show={showModal} onHide={handleModalHide}>
+            <Modal show={showModal} onHide={() => {setShowModal(false)}}>
                 <Modal.Header closeButton>
                     <Icon path={mdiCalendarBlankOutline} size={1} /> &nbsp;&nbsp;&nbsp;&nbsp; <div className="pe-4 pb-1 w-100 text-center">{modalText?.toString() ?? "----"}</div>
                 </Modal.Header>
@@ -115,24 +116,35 @@ export default function BookingAvail() {
                 </Modal.Footer>
             </Modal>
 
-            <div className="container">
+            <Container>
                 <Navbar
                         showMenu={showMenu}
                         menuHideHandler={handleMenuHide}
                         menuShowHandler={handleMenuShow}
                     />
-            </div>
+            </Container>
 
             <HeroGraphic
-                        imageSource="/house-lawn-cropped-3.jpg"
+                        imageSource="/house-lawn-cropped-4.jpg"
                         graphicText=" Booking Availability"
                         iconPath={mdiCalendar}
                     />
             
-            <div className="container-fluid" style={{"paddingBottom": "100px"}}>
-                <div className="row">
-                    <div className="col d-flex justify-content-center">
+            <Container className="fluid" style={{"paddingBottom": "100px"}}>
 
+                <Row className="d-flex justify-content-center">
+                    <Col className="d=flex justify-content-center col-lg-8">
+                        <h1 className="text-center text-primary">Book a Service</h1>
+                        <hr/>
+
+                        <p className='text-center mb-5'>Want to experience everything St. Bonni LWC has to offer? Our working dates are provided in the calendar below. Click on a date to view the available appointment slots for that day.</p>
+                    </Col>
+                </Row>
+                <Row className="mb-4">
+                    <Col className="d-flex justify-content-center">
+                    {isLoading ? (
+                        <Spinner/>
+                    ) : (          
                         <Calendar onChange={handleCalendarChange}
                             value={selectedDate}
                             calendarType="gregory"
@@ -141,22 +153,33 @@ export default function BookingAvail() {
 
                             tileClassName = {({date}) => {
                                 const dateData = new Date(date ?? "----");
-                                const year = new Intl.DateTimeFormat('en', { year: "numeric" }).format(dateData);
-                                const month = new Intl.DateTimeFormat('en', { month: "2-digit" }).format(dateData);
-                                const day = new Intl.DateTimeFormat('en', { day: "2-digit" }).format(dateData);
-                                const dateValue = (`${year}-${month}-${day}`);
+                                const dateValue = (`${new Intl.DateTimeFormat('en', { year: "numeric" }).format(dateData)}-${new Intl.DateTimeFormat('en', { month: "2-digit" }).format(dateData)}-${new Intl.DateTimeFormat('en', { day: "2-digit" }).format(dateData)}`);
 
                                 if (availableDates.includes(dateValue)) {
                                     return  'available'
+                                } else {
+                                    return 'unavailable'
                                 }
                             }}
 
                             minDate = {
                                 new Date()
                             }/>
-                    </div>
-                </div>
-            </div>
+                    )}
+                    </Col>
+                </Row>
+
+                <Row className="d-flex justify-content-center">
+                    <Col className="d-flex justify-content-center">
+                    <p className="fw-bold">Legend:</p>
+
+                    <ul>
+                        <li className='text-primary'>Available</li>
+                        <li className='text-danger'>Unavailable</li>
+                    </ul>
+                    </Col>
+                </Row>
+            </Container>
         </>
     )
 }

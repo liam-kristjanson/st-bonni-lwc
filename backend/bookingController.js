@@ -90,6 +90,40 @@ function generateBookings(startTime, endTime) {
   return generatedBookings;
 }
 
+module.exports.bookSlot = async (req, res) => {
+  let dayRecord = await dbRetriever.fetchOneDocument('bookings', {date: new Date(req.body.selectedDate)});
+  console.log(req.body);
+  if (dayRecord) {
+    for (let i = 0; i < dayRecord.bookings.length; i++) {
+      if (new Date(dayRecord.bookings[i].startTime).getTime() === new Date(req.body.selectedTime).getTime())  {
+        console.log("Matched record:");
+        console.log(dayRecord.bookings[i]);
+
+        dayRecord.bookings[i].isAvailable = false;
+        dayRecord.bookings[i].customerName = req.body.name;
+        dayRecord.bookings[i].email = req.body.email;
+        dayRecord.bookings[i].phoneNumber = req.body.phone;
+        dayRecord.bookings[i].address = req.body.address;
+        dayRecord.bookings[i].serviceType = req.body.serviceOption;
+        
+
+        console.log("Modified record");
+        console.log(dayRecord.bookings[i]);
+      }
+    }
+
+    const result = await dbRetriever.updateOne('bookings', {date: new Date(req.body.selectedDate)}, {$set: {bookings: dayRecord.bookings}})
+
+    if (result.acknowledged) {
+      return res.status(200).json({message: "Request Sent"})
+    }
+
+    return res.status(500).json({error: "Error occured while writing to database"})
+  }
+  
+  return res.status(400).json({error: "Failed to fetch day record"})
+};
+
 function expandAvailabilitySlots(bookingsArr, originalEndTime, newEndTime) {
   let newTimeslots = helpers.generateHourlyTimeslots(originalEndTime, newEndTime);
 
@@ -141,6 +175,7 @@ module.exports.generateReviewLink = (req, res) => {
 }
 
 module.exports.getFilteredBookings = async (req, res) => {
+  console.log(" --- Get filtered bookings --- ");
   try {
     const { filter, startDate, endDate } = req.query;
     
@@ -204,4 +239,21 @@ module.exports.getFilteredBookings = async (req, res) => {
       console.error("Error fetching bookings:", error);
       res.status(500).json({ message: 'Error fetching bookings', error: error.message });
   }
+}
+
+module.exports.getBookings = (req, res) => {
+  console.log(" --- Bookings route requested ---")
+    let retrieveDoc = [];
+
+    if (req.query.date) {
+        console.log("Fetching records for date " + new Date(req.query.date + " 00:00"))
+        retrieveDoc = dbRetriever.fetchOneDocument("bookings", {date: new Date(req.query.date + " 00:00")})
+    } else {
+        console.log("Fetching records for any date");
+        retrieveDoc = dbRetriever.fetchDocuments("bookings", {})
+    }
+
+    retrieveDoc.then(bookingData => {
+        res.json(bookingData);
+    });
 }

@@ -178,6 +178,15 @@
     color: #ffffff;
 }
 
+.unavailable:enabled {
+    color: #dc3545;
+}
+
+.unavailable:enabled:hover {
+    background: #dc3545;
+    color: #ffffff;
+}
+
 abbr[title] {
     text-decoration: none;
 }

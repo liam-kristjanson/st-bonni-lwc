@@ -20,6 +20,7 @@ const Serves = () => {
 
           <div className="col-xl-4 col-md-6 col-sm-12">
             <PromotionOffered
+              isMostPopular
               price="$600"
               mainHeading={"Medium Offer"}
               secondaryHeading={"Lawn Fertilization"}
