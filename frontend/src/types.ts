@@ -25,7 +25,7 @@ export interface Review {
     serviceDate: string,
     customerEmail: string,
     customerName: string,
-    comment: string,
+    comments: string,
     isSubmitted: boolean,
     rating: number,
     submittedDate: string
