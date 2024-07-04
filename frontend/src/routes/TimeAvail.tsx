@@ -1,15 +1,22 @@
-import { Button, Card, Col, Container, Form, Modal, Row, Table } from "react-bootstrap";
+import { Button, Card, Col, Container, Form, Modal, Row, Spinner, Table } from "react-bootstrap";
 
 import Navbar from "../components/Navbar"
 import useNavbar from '../components/hooks/useNavbar';
+
+import { useNavigate } from "react-router-dom";
 
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Booking } from "../types";
 
+import Icon from '@mdi/react';
+import { mdiMenuLeft } from '@mdi/js';
+
 export default function TimeAvail() {
     const {showMenu, handleMenuShow, handleMenuHide} = useNavbar();
     const [showModal, setShowModal] = useState<boolean>(false);
+
+    const navigate = useNavigate();
 
     const [fullName, setFullName] = useState<string>("");
     const [email, setEmail] = useState<string>("");
@@ -21,6 +28,8 @@ export default function TimeAvail() {
 
     const [serverMessage, setServerMessage] = useState<string>('');
     const [serverMessageType, setServerMessageType] = useState<'success' | 'danger'>('success');
+
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     const { state } = useLocation();
     const { date } = state;
@@ -57,8 +66,6 @@ export default function TimeAvail() {
             body: JSON.stringify(requestBody)
         })
         .then(response => {
-            console.log("Response Okay: " + response.ok);
-
             if (response.ok) {
                 setServerMessageType('success');
             } else {
@@ -69,6 +76,18 @@ export default function TimeAvail() {
         })
         .then(responseData => {
             setServerMessage(responseData.message ?? responseData.error);
+
+            if (responseData.message) {
+                navigate("/confirmation", {state: {
+                    name: fullName,
+                    email: email,
+                    phone: phone,
+                    address: address,
+                    serviceOption: serviceOption,
+                    selectedTime: selectedTime,
+                    selectedDate: date.toISOString(),
+                }});
+            }
         })
         .catch(err => {
             console.error("Error fetching data: " + err);
@@ -79,6 +98,7 @@ export default function TimeAvail() {
         fetch(import.meta.env.VITE_SERVER + "/bookings?date=" + encodeURIComponent(date.toLocaleDateString()))
 
         .then(dateResponse => {
+            setIsLoading(false);
             return dateResponse.json()
         })
         .then(dateData => {
@@ -119,9 +139,9 @@ export default function TimeAvail() {
                             <Form.Label>Service Options</Form.Label>
                             <Form.Select onChange={(e) => setServiceOption(e.target.value)}required>
                                 <option value="" selected disabled hidden> -- Select a service offering -- </option>
-                                <option value="option_1">Option 1</option>
-                                <option value="option_2">Option 2</option>
-                                <option value="option_3">Option 3</option>
+                                <option value="Lawn">Lawn</option>
+                                <option value="Windows">Windows</option>
+                                <option value="Lawn & Windows">Lawn & Windows</option>
                             </Form.Select>
                         </Form.Group>
 
@@ -144,13 +164,18 @@ export default function TimeAvail() {
                     />
             </Container>
 
+            <a style={{"position": "absolute", "fontSize": "140%", "cursor": "pointer"}} onClick={() => navigate("/booking-availability")}>
+                <Icon path={mdiMenuLeft} size={1.4} style={{"verticalAlign": "text-top"}}/>
+                Back
+            </a>
+
             <Container className="fluid" style={{"paddingBottom": "100px"}}>
                 <div style={{"paddingBottom": "30px"}}></div>
 
                 <Row className="text-center mb-2">
-                    <div className="col">
+                    <Col>
                         <h1 className="text-primary">{displayDate}</h1>
-                    </div>
+                    </Col>
                 </Row>
 
                 <div style={{"paddingBottom": "20px"}}></div>
@@ -163,22 +188,26 @@ export default function TimeAvail() {
                             </Card.Header>
 
                             <Card.Body>
-                                <Table hover style={{"tableLayout": "fixed"}}>
-                                    <tbody>
-                                        {timeslots.map((timeslot) => (
-                                            <tr>
-                                                <td className="text-center align-middle">{new Date(timeslot.startTime).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}</td>
-                                                <td className="text-center align-middle">{new Date(timeslot.endTime).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}</td>
-                                                
-                                                {timeslot.isAvailable === true ? (
-                                                    <td><td className="d-flex justify-content-center"><Button onClick={() => {setShowModal(true), setSelectedTime(timeslot.startTime.toString())}} className="btn-sm w-75 fw-bold text-white" type="submit" variant="primary">Book</Button></td></td>
-                                                ) : (
-                                                    <td><td className="d-flex justify-content-center"><Button className="btn-sm w-75 fw-bold text-white" type="submit" variant="danger" disabled>Booked</Button></td></td>
-                                                )}
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </Table>
+                                {isLoading ? (
+                                    <Spinner/>
+                                ) : (
+                                    <Table hover style={{"tableLayout": "fixed"}}>
+                                        <tbody>
+                                            {timeslots.map((timeslot) => (
+                                                <tr>
+                                                    <td className="text-center align-middle">{new Date(timeslot.startTime).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}</td>
+                                                    <td className="text-center align-middle">{new Date(timeslot.endTime).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}</td>
+                                                    
+                                                    {timeslot.isAvailable === true ? (
+                                                        <td><td className="d-flex justify-content-center"><Button onClick={() => {setShowModal(true), setSelectedTime(timeslot.startTime.toString())}} className="btn-sm w-75 fw-bold text-white" type="submit" variant="primary">Book</Button></td></td>
+                                                    ) : (
+                                                        <td><td className="d-flex justify-content-center"><Button className="btn-sm w-75 fw-bold text-white" type="submit" variant="danger" disabled>Booked</Button></td></td>
+                                                    )}
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </Table>
+                                )}
                             </Card.Body>
                         </Card>
                     </Col>

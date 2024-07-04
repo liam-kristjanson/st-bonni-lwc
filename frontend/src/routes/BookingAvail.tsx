@@ -10,7 +10,7 @@ import "../components/styles/ReactCalendar.css"
 
 import { useNavigate } from "react-router-dom";
 
-import { Button, Col, Container, Modal, Row } from 'react-bootstrap';
+import { Button, Col, Container, Modal, Row, Spinner } from 'react-bootstrap';
 
 import Icon from '@mdi/react';
 import { mdiCalendar, mdiCalendarBlankOutline } from '@mdi/js';
@@ -32,10 +32,13 @@ export default function BookingAvail() {
     const [availStatus, setAvailStatus] = useState<string>("unavailable");
     const [availableDates, setAvailableDates] = useState<string[]>([]);
 
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+
     useEffect(() => {
         fetch(import.meta.env.VITE_SERVER + "/bookings")
 
         .then(bookingResponse => {
+            setIsLoading(false);
             return bookingResponse.json();
         })
 
@@ -139,9 +142,9 @@ export default function BookingAvail() {
                 </Row>
                 <Row className="mb-4">
                     <Col className="d-flex justify-content-center">
-
-                        
-
+                    {isLoading ? (
+                        <Spinner/>
+                    ) : (          
                         <Calendar onChange={handleCalendarChange}
                             value={selectedDate}
                             calendarType="gregory"
@@ -162,6 +165,7 @@ export default function BookingAvail() {
                             minDate = {
                                 new Date()
                             }/>
+                    )}
                     </Col>
                 </Row>
 

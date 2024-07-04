@@ -4,6 +4,7 @@ import Home from "./routes/Home";
 import AboutUs from "./routes/AboutUs";
 import BookingAvail from "./routes/BookingAvail";
 import TimeAvail from "./routes/TimeAvail";
+import Confirmation from "./routes/Confirmation";
 import Serves from "./routes/Serves";
 import Contact from "./routes/Contact";
 import AdminBook from "./routes/AdminBook";
@@ -31,6 +32,10 @@ export const router = createBrowserRouter([
     {
         path: "/time-availability",
         element: <TimeAvail/>
+    },
+    {
+        path: "/confirmation",
+        element: <Confirmation/>
     },
     {
         path: "/lawn-services",
