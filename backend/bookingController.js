@@ -175,6 +175,7 @@ module.exports.generateReviewLink = (req, res) => {
 }
 
 module.exports.getFilteredBookings = async (req, res) => {
+  console.log(" --- Get filtered bookings --- ");
   try {
     const { filter, startDate, endDate } = req.query;
     
@@ -238,4 +239,21 @@ module.exports.getFilteredBookings = async (req, res) => {
       console.error("Error fetching bookings:", error);
       res.status(500).json({ message: 'Error fetching bookings', error: error.message });
   }
+}
+
+module.exports.getBookings = (req, res) => {
+  console.log(" --- Bookings route requested ---")
+    let retrieveDoc = [];
+
+    if (req.query.date) {
+        console.log("Fetching records for date " + new Date(req.query.date + " 00:00"))
+        retrieveDoc = dbRetriever.fetchOneDocument("bookings", {date: new Date(req.query.date + " 00:00")})
+    } else {
+        console.log("Fetching records for any date");
+        retrieveDoc = dbRetriever.fetchDocuments("bookings", {})
+    }
+
+    retrieveDoc.then(bookingData => {
+        res.json(bookingData);
+    });
 }

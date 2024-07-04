@@ -4,6 +4,8 @@ const dbRetriever = require('./dbretriever.js')
 
 
 module.exports.submitReview = async(req, res) => {
+    console.log(" --- Submit Review ---");
+    console.log("Review request body:");
     console.log(req.body);
 
     try {
@@ -53,3 +55,10 @@ module.exports.submitReview = async(req, res) => {
     }
     
 }; 
+
+module.exports.getReviews = (req, res) => {
+  dbRetriever.fetchDocuments("reviews", {})
+    .then(reviewInfo => {
+        res.json(reviewInfo);
+    });
+}

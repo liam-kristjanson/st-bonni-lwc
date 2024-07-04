@@ -31,62 +31,19 @@ app.use(authController.jwtParser)
 //route-groupe middleware
 app.use('/admin/', authController.verifyAdmin);
 
-//login route
-app.post("/login", authController.handleLogin);
-app.get("/reviews", reviewController.submitReview);
-
+//root path to wake up the server or check status
 app.get('/', (req, res) => {
+    console.log(" --- Root path ---")
     res.send('Service is running');
 })
 
-app.get('/user', (req, res) => {
-    dbRetriever.fetchOneDocument('users', {username: 'admin'}).then(user => {
-        res.send(user);
-    })
-})
+//app routes
+app.post("/login", authController.handleLogin);
 app.post("/reset-password", authController.resetPassword);
-
-app.get("/bookings", (req, res) => {
-    let retrieveDoc = [];
-
-    if (req.query.date) {
-        console.log("Fetching records for date " + new Date(req.query.date + " 00:00"))
-        retrieveDoc = dbRetriever.fetchOneDocument("bookings", {date: new Date(req.query.date + " 00:00")})
-    } else {
-        console.log("Fetching records for any date");
-        retrieveDoc = dbRetriever.fetchDocuments("bookings", {})
-    }
-
-    retrieveDoc.then(bookingData => {
-        res.json(bookingData);
-    });
-});
-
-app.post("/availability", bookingController.handleUpdateAvailability);
-
-//admin Dashboard 
+app.get("/bookings", bookingController.getBookings);
 app.get("/bookingsfilter", bookingController.getFilteredBookings);
-
-app.get("/reviews", (req, res) => {
-    dbRetriever.fetchDocuments("reviews", {})
-    .then(reviewInfo => {
-        res.json(reviewInfo);
-    });
-});
+app.get("/reviews", reviewController.getReviews);
 app.post("/reviews", reviewController.submitReview)
-
-app.get('/log-auth-token', (req, res) => {
-    let verifiedAuthToken = jwt.verify(req.headers.authorization, process.env.JWT_SECRET);
-
-    console.log('Unverified auth token:')
-    console.log(req.headers.authorization);
-
-    console.log('Verified auth token');
-    console.log(verifiedAuthToken);
-
-    res.send('Auth token has been logged in the backend');
-}) 
-
 app.post("/admin/availability", bookingController.handleUpdateAvailability);
 app.post("/admin/update-account-info", authController.updateAccountInfo);
 app.post("/book-slot", bookingController.bookSlot);

@@ -63,6 +63,7 @@ module.exports.handleLogin = async (req, res) => {
 }
 
 module.exports.resetPassword = async (req, res) => {
+  console.log(" --- Reset Password --- ")
     try {
         const { email, newPassword } = req.body;
 
