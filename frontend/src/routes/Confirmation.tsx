@@ -1,23 +1,17 @@
 import { useEffect } from "react";
-import { Button, Card, Col, Container, Row, Table } from "react-bootstrap";
+import { Button, Col, Container, Row, Table } from "react-bootstrap";
 
 import Navbar from "../components/Navbar";
 import useNavbar from "../components/hooks/useNavbar";
 
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function Confirmation() {
     const {showMenu, handleMenuShow, handleMenuHide} = useNavbar();
-
+    const navigate = useNavigate();
     const { state } = useLocation();
 
-    const { name } = state;
-    const { email } = state;
-    const { phone } = state;
-    const { address } = state;
-    const { serviceOption } = state;
-    const { selectedTime } = state;
-    const { selectedDate } = state;
+    const { name, email, phone, address, serviceOption, selectedTime, selectedDate } = state;
 
     useEffect(() => {
         //console.log(name);
@@ -96,7 +90,8 @@ export default function Confirmation() {
 
             <Row className="justify-content-center mb-2">
                 <Col className="col-md-4">
-                    <Button className="btn-sm w-100 fw-bold text-white d-print-none" type="button" onClick={() => window.print()}>Print</Button>
+                    <Button className="btn-sm w-100 fw-bold text-white d-print-none mb-4" type="button" onClick={() => window.print()}>Print</Button>
+                    <Button className="btn-sm w-100 fw-bold text-white d-print-none" type="button" onClick={() => navigate('/')}>Return to Homepage</Button>
                 </Col>
             </Row>
         </Container>
