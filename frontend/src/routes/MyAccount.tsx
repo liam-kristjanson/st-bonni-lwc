@@ -94,7 +94,7 @@ export default function MyAccount() {
             <Container>
                 <Row className="d-flex justify-content-center min-vh-100">
                     <Col lg={8}>
-                        <h1 className="text-primary mb-4">My Account</h1>
+                        <h1 className="text-primary mb-4 pt-5">My Account</h1>
 
                         <Card className="mb-5">
                             <Form onSubmit={e => {handleAccountInfoSubmit(e)}}>

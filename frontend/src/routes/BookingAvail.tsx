@@ -128,8 +128,19 @@ export default function BookingAvail() {
                     />
             
             <Container className="fluid" style={{"paddingBottom": "100px"}}>
-                <Row>
+
+                <Row className="d-flex justify-content-center">
+                    <Col className="d=flex justify-content-center col-lg-8">
+                        <h1 className="text-center text-primary">Book a Service</h1>
+                        <hr/>
+
+                        <p className='text-center mb-5'>Want to experience everything St. Bonni LWC has to offer? Our working dates are provided in the calendar below. Click on a date to view the available appointment slots for that day.</p>
+                    </Col>
+                </Row>
+                <Row className="mb-4">
                     <Col className="d-flex justify-content-center">
+
+                        
 
                         <Calendar onChange={handleCalendarChange}
                             value={selectedDate}
@@ -143,12 +154,25 @@ export default function BookingAvail() {
 
                                 if (availableDates.includes(dateValue)) {
                                     return  'available'
+                                } else {
+                                    return 'unavailable'
                                 }
                             }}
 
                             minDate = {
                                 new Date()
                             }/>
+                    </Col>
+                </Row>
+
+                <Row className="d-flex justify-content-center">
+                    <Col className="d-flex justify-content-center">
+                    <p className="fw-bold">Legend:</p>
+
+                    <ul>
+                        <li className='text-primary'>Available</li>
+                        <li className='text-danger'>Unavailable</li>
+                    </ul>
                     </Col>
                 </Row>
             </Container>

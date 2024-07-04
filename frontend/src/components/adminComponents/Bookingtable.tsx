@@ -232,7 +232,8 @@ const BookingTable = () => {
 
   return (
     <Container fluid className="p-3 bg-white min-vh-100">
-      <h1 className="mb-4 text-center">Booking Slots</h1>
+      <h1 className="mb-4 text-center text-primary pt-5">Booking Slots</h1>
+      <hr/>
       <Row className="mb-3">
         <Col md={12} className="mb-2">
           <div className="d-flex align-items-center">

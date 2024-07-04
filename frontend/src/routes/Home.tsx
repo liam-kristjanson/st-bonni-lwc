@@ -75,13 +75,25 @@ function App() {
       <Container>
         <Row className=' d-flex justify-content-center align-items-center'>
           <Col className=" col-12 col-lg-6 col-xl-4  mb-4">
-            <CustomerRev/>
+            <CustomerRev
+              customerName="John Appleseed"
+              numStars={5}
+              reviewText="Wow, what a great service from St. Bonni LWC! These masters of lawncare did miracles to my lawn and took great care not to disturb my apple trees. I will be booking with St. Bonni LWC again soon!"
+            />
           </Col>
           <Col className='col-12 col-lg-6 col-xl-4 mb-4'>
-            <CustomerRev/>
+            <CustomerRev
+              customerName="Larry McDonald"
+              numStars={5}
+              reviewText="It's been a long time since I've been able to mow my own lawn. I have hired other lawncare companies for my property but their quality of work is nothing compared to that of St. Bonni LWC. Thank you Eric for making my retirement life much better!"
+            />
           </Col>
           <Col className='col-12 col-lg-6 col-xl-4 mb-4'>
-            <CustomerRev/>
+            <CustomerRev
+              customerName="Wendy Whalburg"
+              numStars={5}
+              reviewText="The gentlemen at St. Bonni LWC really went above and beyond not only with my lawn, but my windows as well! Who knew a business could take such good care of its customers?"
+            />
           </Col>
           
         </Row>
