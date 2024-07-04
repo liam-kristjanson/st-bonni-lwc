@@ -11,8 +11,10 @@ import Login from "./routes/Login";
 import AdminDashboard from "./routes/AdminDashboard";
 import Schedule from "./routes/Schedule";
 import Reviews from "./routes/Reviews";
+import AdminReview from "./routes/AdminReview";
 
 import ProtectedRoute from "./components/ProtectedRoute";
+
 
 export const router = createBrowserRouter([
     {
@@ -64,6 +66,10 @@ export const router = createBrowserRouter([
     {
         path:"/reviews",
         element:<Reviews/>
+    },
+    {
+        path:"/admin/reviews",
+        element:<AdminReview/>
     }
 
 ])

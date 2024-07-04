@@ -57,7 +57,7 @@ app.get("/bookings", (req, res) => {
 //admin Dashboard 
 app.get("/bookingsfilter", bookingController.getFilteredBookings);
 
-app.get("/reviews", (req, res) => {
+app.get("/admin/reviews", (req, res) => {
     dbRetriever.fetchDocuments("reviews", {})
     .then(reviewInfo => {
         res.json(reviewInfo);

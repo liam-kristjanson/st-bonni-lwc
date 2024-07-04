@@ -34,7 +34,7 @@ const SlotCard = ({ slot }: { slot: Slot }) => {
   const endTime = new Date(slot.endTime).toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
-  });
+});
 
   function generateReviewLink(slot: Slot) {
     setIsLoading(true);

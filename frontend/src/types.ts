@@ -21,6 +21,16 @@ export interface Booking {
     bookings: Slot[]
 }
 
+export interface Review {
+    serviceDate: string,
+    customerEmail: string,
+    customerName: string,
+    comment: string,
+    isSubmitted: boolean,
+    rating: number,
+    submittedDate: string
+}
+
 export interface Slot {
     startTime: string;
     endTime: string;
@@ -35,3 +45,4 @@ export interface Slot {
     date: string;
     bookings: Slot[];
   }
+
